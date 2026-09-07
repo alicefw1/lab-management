@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.EnvironmentSensorMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.EnvironmentSensor">
+        <id column="id" property="id"/>
+        <result column="sensor_code" property="sensorCode"/>
+        <result column="name" property="name"/>
+        <result column="location" property="location"/>
+        <result column="lab_id" property="labId"/>
+        <result column="type" property="type"/>
+        <result column="unit" property="unit"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="lab_name" property="labName"/>
+        <result column="current_value" property="currentValue"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT s.*, lr.name AS lab_name,
+               (SELECT ed.value FROM environment_data ed WHERE ed.sensor_id = s.id ORDER BY ed.collect_time DESC LIMIT 1) AS current_value
+        FROM environment_sensor s
+        LEFT JOIN lab_room lr ON s.lab_id = lr.id
+        ORDER BY s.id
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT s.*, lr.name AS lab_name,
+               (SELECT ed.value FROM environment_data ed WHERE ed.sensor_id = s.id ORDER BY ed.collect_time DESC LIMIT 1) AS current_value
+        FROM environment_sensor s
+        LEFT JOIN lab_room lr ON s.lab_id = lr.id
+        WHERE s.id = #{id}
+    </select>
+    <select id="countByStatus" resultType="int">
+        SELECT COUNT(*) FROM environment_sensor WHERE status = #{status}
+    </select>
+    <select id="selectRecentData" resultType="map">
+        SELECT value, collect_time AS collectTime
+        FROM environment_data
+        WHERE sensor_id = #{sensorId}
+        ORDER BY collect_time DESC
+        LIMIT #{limit}
+    </select>
+</mapper>

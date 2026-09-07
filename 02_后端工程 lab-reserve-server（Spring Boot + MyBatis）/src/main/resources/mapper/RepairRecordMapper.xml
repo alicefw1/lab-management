@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.RepairRecordMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.RepairRecord">
+        <id column="id" property="id"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="user_id" property="userId"/>
+        <result column="fault_desc" property="faultDesc"/>
+        <result column="repair_status" property="repairStatus"/>
+        <result column="repair_result" property="repairResult"/>
+        <result column="report_time" property="reportTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="device_no" property="deviceNo"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT r.*, d.device_name, d.device_no, u.real_name AS user_name
+        FROM repair_record r
+        LEFT JOIN device d ON r.device_id = d.id
+        LEFT JOIN `user` u ON r.user_id = u.id
+        <where>
+            <if test="status != null">AND r.repair_status = #{status}</if>
+            <if test="userId != null">AND r.user_id = #{userId}</if>
+        </where>
+        ORDER BY r.report_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT r.*, d.device_name, d.device_no, u.real_name AS user_name
+        FROM repair_record r
+        LEFT JOIN device d ON r.device_id = d.id
+        LEFT JOIN `user` u ON r.user_id = u.id
+        WHERE r.id = #{id}
+    </select>
+
+    <select id="countPendingByDeviceId" resultType="int">
+        SELECT COUNT(*) FROM repair_record WHERE device_id = #{deviceId} AND repair_status IN (0, 1)
+    </select>
+
+    <insert id="insert" parameterType="com.lab.reserve.entity.RepairRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO repair_record(device_id, user_id, fault_desc, repair_status, report_time)
+        VALUES(#{deviceId}, #{userId}, #{faultDesc}, #{repairStatus}, #{reportTime})
+    </insert>
+
+    <update id="updateById" parameterType="com.lab.reserve.entity.RepairRecord">
+        UPDATE repair_record
+        <set>
+            <if test="repairStatus != null">repair_status = #{repairStatus},</if>
+            <if test="repairResult != null">repair_result = #{repairResult},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

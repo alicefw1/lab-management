@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.HazardousChemicalMapper">
+    <select id="selectList" resultType="com.lab.reserve.entity.HazardousChemical">
+        SELECT * FROM hazardous_chemical
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (name LIKE CONCAT('%', #{keyword}, '%') OR cas_no LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+    <select id="selectById" resultType="com.lab.reserve.entity.HazardousChemical">
+        SELECT * FROM hazardous_chemical WHERE id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.HazardousChemical" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO hazardous_chemical(cas_no, name, risk_level, category, unit, description)
+        VALUES(#{casNo}, #{name}, #{riskLevel}, #{category}, #{unit}, #{description})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.HazardousChemical">
+        UPDATE hazardous_chemical
+        <set>
+            <if test="casNo != null">cas_no = #{casNo},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="riskLevel != null">risk_level = #{riskLevel},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="description != null">description = #{description},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM hazardous_chemical WHERE id = #{id}
+    </delete>
+</mapper>

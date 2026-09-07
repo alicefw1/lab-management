@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.DevicePurchaseMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.DevicePurchase">
+        <id column="id" property="id"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="model" property="model"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="unit_price" property="unitPrice"/>
+        <result column="supplier" property="supplier"/>
+        <result column="applicant_id" property="applicantId"/>
+        <result column="purpose" property="purpose"/>
+        <result column="status" property="status"/>
+        <result column="audit_user_id" property="auditUserId"/>
+        <result column="audit_time" property="auditTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="applicant_name" property="applicantName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT dp.*, dc.category_name, u.real_name AS applicant_name
+        FROM device_purchase dp
+        LEFT JOIN device_category dc ON dp.category_id = dc.id
+        LEFT JOIN `user` u ON dp.applicant_id = u.id
+        <where>
+            <if test="status != null">AND dp.status = #{status}</if>
+        </where>
+        ORDER BY dp.create_time DESC
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT dp.*, dc.category_name, u.real_name AS applicant_name
+        FROM device_purchase dp
+        LEFT JOIN device_category dc ON dp.category_id = dc.id
+        LEFT JOIN `user` u ON dp.applicant_id = u.id
+        WHERE dp.id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.DevicePurchase" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO device_purchase(device_name, model, category_id, quantity, unit_price, supplier, applicant_id, purpose, status)
+        VALUES(#{deviceName}, #{model}, #{categoryId}, #{quantity}, #{unitPrice}, #{supplier}, #{applicantId}, #{purpose}, #{status})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.DevicePurchase">
+        UPDATE device_purchase
+        <set>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="unitPrice != null">unit_price = #{unitPrice},</if>
+            <if test="supplier != null">supplier = #{supplier},</if>
+            <if test="purpose != null">purpose = #{purpose},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditUserId != null">audit_user_id = #{auditUserId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM device_purchase WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.DeviceMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.Device">
+        <id column="id" property="id"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="device_no" property="deviceNo"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="model" property="model"/>
+        <result column="location" property="location"/>
+        <result column="status" property="status"/>
+        <result column="purchase_date" property="purchaseDate"/>
+        <result column="description" property="description"/>
+        <result column="brand" property="brand"/>
+        <result column="specification" property="specification"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="category_name" property="categoryName"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT d.*, c.category_name
+        FROM device d
+        LEFT JOIN device_category c ON d.category_id = c.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (d.device_name LIKE CONCAT('%', #{keyword}, '%') OR d.device_no LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null">AND d.status = #{status}</if>
+        </where>
+        ORDER BY d.id
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT d.*, c.category_name
+        FROM device d
+        LEFT JOIN device_category c ON d.category_id = c.id
+        WHERE d.id = #{id}
+    </select>
+
+    <select id="selectByCategoryId" resultMap="BaseResultMap">
+        SELECT d.*, c.category_name
+        FROM device d
+        LEFT JOIN device_category c ON d.category_id = c.id
+        WHERE d.category_id = #{categoryId}
+        ORDER BY d.id
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM device
+    </select>
+
+    <insert id="insert" parameterType="com.lab.reserve.entity.Device" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO device(category_id, device_no, device_name, model, location, status, purchase_date, description, brand, specification, image_url)
+        VALUES(#{categoryId}, #{deviceNo}, #{deviceName}, #{model}, #{location}, #{status}, #{purchaseDate}, #{description}, #{brand}, #{specification}, #{imageUrl})
+    </insert>
+
+    <update id="updateById" parameterType="com.lab.reserve.entity.Device">
+        UPDATE device
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="deviceNo != null">device_no = #{deviceNo},</if>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="purchaseDate != null">purchase_date = #{purchaseDate},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="specification != null">specification = #{specification},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM device WHERE id = #{id}
+    </delete>
+
+    <update id="updateStatus">
+        UPDATE device SET status = #{status} WHERE id = #{id}
+    </update>
+</mapper>

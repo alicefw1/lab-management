@@ -1,0 +1,6 @@
+"id","role_name","role_code"
+1,学生,STUDENT
+2,实验员,LAB_ADMIN
+3,管理员,ADMIN
+4,教师,TEACHER
+5,系主任,DEPARTMENT_HEAD

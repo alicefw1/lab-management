@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.OperationLogMapper">
+    <insert id="insert" parameterType="com.lab.reserve.entity.OperationLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO operation_log(user_id, username, module, action, detail, ip)
+        VALUES(#{userId}, #{username}, #{module}, #{action}, #{detail}, #{ip})
+    </insert>
+    <select id="selectList" resultType="com.lab.reserve.entity.OperationLog">
+        SELECT * FROM operation_log
+        <where>
+            <if test="module != null and module != ''">AND module = #{module}</if>
+            <if test="keyword != null and keyword != ''">
+                AND (username LIKE CONCAT('%', #{keyword}, '%') OR action LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        <if test="limit != null">LIMIT #{limit}</if>
+    </select>
+</mapper>

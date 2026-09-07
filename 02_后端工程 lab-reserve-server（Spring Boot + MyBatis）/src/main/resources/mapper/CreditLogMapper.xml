@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.CreditLogMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.CreditLog">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="change_type" property="changeType"/>
+        <result column="score_change" property="scoreChange"/>
+        <result column="reason" property="reason"/>
+        <result column="create_time" property="createTime"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT cl.*, u.real_name AS user_name
+        FROM credit_log cl
+        LEFT JOIN `user` u ON cl.user_id = u.id
+        <where>
+            <if test="userId != null">AND cl.user_id = #{userId}</if>
+        </where>
+        ORDER BY cl.create_time DESC
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.CreditLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO credit_log(user_id, change_type, score_change, reason)
+        VALUES(#{userId}, #{changeType}, #{scoreChange}, #{reason})
+    </insert>
+</mapper>

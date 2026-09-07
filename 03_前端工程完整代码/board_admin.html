@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理端 - 实验室设备管理系统</title>
+    <link href="assets/app.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="logo">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="name">实验设备管理<small>Lab Equipment System</small></div>
+        </div>
+        <nav class="nav">
+            <div class="nav-group">
+                <div class="nav-label">管理台</div>
+                <div class="nav-item" onclick="location.href='board_dashboard.html'" style="background:linear-gradient(90deg, rgba(34,211,238,0.12), rgba(59,130,246,0.06));color:var(--primary);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    数据大屏
+                </div>
+                <div class="nav-item active" data-page="overview">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+                    数据看板
+                </div>
+                <div class="nav-item" data-page="devices">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    设备管理
+                </div>
+                <div class="nav-item" data-page="approve">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    借用审批
+                </div>
+                <div class="nav-item" data-page="records">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+                    借用记录
+                </div>
+                <div class="nav-item" data-page="overdue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    逾期管理
+                </div>
+                <div class="nav-item" data-page="repairs">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    报修处理
+                </div>
+                <div class="nav-item" data-page="notices">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    公告管理
+                </div>
+                <div class="nav-item" data-page="users" id="navUsers">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    用户管理
+                </div>
+            </div>
+            <div class="nav-group">
+                <div class="nav-label">综合管理</div>
+                <div class="nav-item" data-page="lab-manage">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V8l6-4 6 4v12"/><path d="M9 20v-4h6v4"/></svg>
+                    实验室管理
+                </div>
+                <div class="nav-item" data-page="lab-audit">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    实验室预约审核
+                </div>
+                <div class="nav-item" data-page="dev-reserve-audit">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    设备预约审核
+                </div>
+                <div class="nav-item" data-page="purchase-manage">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    采购管理
+                </div>
+                <div class="nav-item" data-page="consumables">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    耗材管理
+                </div>
+                <div class="nav-item" data-page="chemicals">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6l-5 9a2 2 0 0 0 1.73 3h12.54A2 2 0 0 0 20 17l-5-9V2"/><path d="M6.5 2h11"/></svg>
+                    危化品标准库
+                </div>
+                <div class="nav-item" data-page="wastes">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    废弃物管理
+                </div>
+                <div class="nav-item" data-page="credit-manage">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+                    诚信管理
+                </div>
+                <div class="nav-item" data-page="lab-type">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V8l6-4 6 4v12"/><path d="M9 20v-4h6v4"/></svg>
+                    实验室类型
+                </div>
+                <div class="nav-item" data-page="feedback-manage">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    反馈建议
+                </div>
+                <div class="nav-item" data-page="alarms">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    报警管理
+                </div>
+                <div class="nav-item" data-page="instruments">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M19 14V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v8"/><path d="M21 14H3v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3z"/></svg>
+                    仪器管理
+                </div>
+                <div class="nav-item" data-page="knowledge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    知识库
+                </div>
+                <div class="nav-item" data-page="logs">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/></svg>
+                    操作日志
+                </div>
+                <div class="nav-item" data-page="scrap-audit">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    报废审核
+                </div>
+            </div>
+        </nav>
+        <div class="user-card">
+            <div class="avatar" id="avatar">A</div>
+            <div class="uinfo">
+                <div class="uname" id="uName">-</div>
+                <div class="urole" id="uRole">管理员</div>
+            </div>
+            <div class="logout" onclick="logout()" title="退出登录">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <h1 id="pageTitle">数据看板</h1>
+                <div class="sub" id="pageSub">实验室运行数据总览</div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">菜单</button>
+            </div>
+        </div>
+
+        <!-- 数据看板 -->
+        <section class="page active" id="page-overview">
+            <div class="stat-grid" id="ovStats"></div>
+            <div class="flex gap-10 mt-16" style="flex-wrap: wrap;">
+                <div class="panel" style="flex:1; min-width:300px;">
+                    <div class="panel-head"><div class="panel-title">设备状态分布</div></div>
+                    <div class="chart-box" id="deviceChart"></div>
+                </div>
+                <div class="panel" style="flex:1; min-width:300px;">
+                    <div class="panel-head"><div class="panel-title">借用记录状态</div></div>
+                    <div class="chart-box" id="recordChart"></div>
+                </div>
+            </div>
+            <div class="flex gap-10 mt-16" style="flex-wrap: wrap;">
+                <div class="panel" style="flex:1; min-width:300px;">
+                    <div class="panel-head"><div class="panel-title">借用申请状态</div></div>
+                    <div class="chart-box" id="applyChart"></div>
+                </div>
+                <div class="panel" style="flex:1; min-width:300px;">
+                    <div class="panel-head"><div class="panel-title">报修工单状态</div></div>
+                    <div class="chart-box" id="repairChart"></div>
+                </div>
+            </div>
+            <div class="panel mt-16">
+                <div class="panel-head"><div class="panel-title">实验室使用率</div></div>
+                <div id="labUsageBox"></div>
+            </div>
+        </section>
+
+        <!-- 设备管理 -->
+        <section class="page" id="page-devices">
+            <div class="toolbar">
+                <input id="devKeyword" class="input grow" placeholder="搜索设备名称 / 编号">
+                <select id="devStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="1">可借</option>
+                    <option value="2">已借出</option>
+                    <option value="3">维修中</option>
+                    <option value="4">报废</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadDevices()">查询</button>
+                <button class="btn btn-ghost" onclick="openCategory()">分类管理</button>
+                <button class="btn btn-success" onclick="openDevice()">新增设备</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead>
+                        <tr><th>编号</th><th>名称</th><th>分类</th><th>型号</th><th>位置</th><th>状态</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="devList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 借用审批 -->
+        <section class="page" id="page-approve">
+            <div class="toolbar">
+                <select id="apStatus" class="select">
+                    <option value="0">待审批</option>
+                    <option value="">全部</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadApplies()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead>
+                        <tr><th>申请人</th><th>设备编号</th><th>设备名称</th><th>申请理由</th><th>预计归还</th><th>状态</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="applyList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 借用记录 -->
+        <section class="page" id="page-records">
+            <div class="toolbar">
+                <select id="rcStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="1">借用中</option>
+                    <option value="2">已归还</option>
+                    <option value="3">逾期</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadRecords()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead>
+                        <tr><th>借用人</th><th>设备编号</th><th>设备名称</th><th>借用时间</th><th>归还时间</th><th>状态</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="recordList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 逾期管理 -->
+        <section class="page" id="page-overdue">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="doRefreshOverdue()">刷新逾期状态</button>
+                <button class="btn btn-ghost" onclick="loadOverdue()">刷新列表</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead>
+                        <tr><th>借用人</th><th>设备编号</th><th>设备名称</th><th>借用时间</th><th>状态</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="overdueList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 报修处理 -->
+        <section class="page" id="page-repairs">
+            <div class="toolbar">
+                <select id="rpStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="0">待处理</option>
+                    <option value="1">维修中</option>
+                    <option value="2">已完成</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadRepairs()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead>
+                        <tr><th>报修人</th><th>设备编号</th><th>设备名称</th><th>故障描述</th><th>报修时间</th><th>状态</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="repairList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 公告管理 -->
+        <section class="page" id="page-notices">
+            <div class="toolbar">
+                <button class="btn btn-success" onclick="openNotice()">发布公告</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead>
+                        <tr><th>标题</th><th>发布人</th><th>发布时间</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="noticeList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 用户管理 -->
+        <section class="page" id="page-users">
+            <div class="toolbar">
+                <input id="usKeyword" class="input grow" placeholder="搜索用户名 / 姓名 / 手机号">
+                <select id="usRole" class="select"><option value="">全部角色</option></select>
+                <button class="btn btn-primary" onclick="loadUsers()">查询</button>
+                <button class="btn btn-success" onclick="openUser()">新增用户</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead>
+                        <tr><th>用户名</th><th>姓名</th><th>角色</th><th>手机号</th><th>邮箱</th><th>状态</th><th>操作</th></tr>
+                    </thead>
+                    <tbody id="userList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 实验室管理 -->
+        <section class="page" id="page-lab-manage">
+            <div class="toolbar">
+                <button class="btn btn-success" onclick="openLab()">新增实验室</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>名称</th><th>位置</th><th>容量</th><th>负责人</th><th>描述</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="labManageList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 实验室预约审核 -->
+        <section class="page" id="page-lab-audit">
+            <div class="toolbar">
+                <select id="labAuditStatus" class="select">
+                    <option value="0">待审核</option>
+                    <option value="">全部</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadLabAudit()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>申请人</th><th>实验室</th><th>预约日期</th><th>时间段</th><th>用途</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="labAuditList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 设备预约审核 -->
+        <section class="page" id="page-dev-reserve-audit">
+            <div class="toolbar">
+                <select id="devReserveAuditStatus" class="select">
+                    <option value="0">待审核</option>
+                    <option value="">全部</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadDevReserveAudit()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>申请人</th><th>设备编号</th><th>设备名称</th><th>预约日期</th><th>时间段</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="devReserveAuditList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 采购管理 -->
+        <section class="page" id="page-purchase-manage">
+            <div class="toolbar">
+                <select id="purchaseStatus" class="select">
+                    <option value="0">待审批</option>
+                    <option value="">全部</option>
+                    <option value="1">已批准</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadPurchaseManage()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>设备名称</th><th>型号</th><th>数量</th><th>单价</th><th>供应商</th><th>申请人</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="purchaseManageList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 耗材管理 -->
+        <section class="page" id="page-consumables">
+            <div class="toolbar">
+                <input id="csKeyword" class="input grow" placeholder="搜索耗材名称 / 分类">
+                <button class="btn btn-primary" onclick="loadConsumables()">查询</button>
+                <button class="btn btn-success" onclick="openConsumable()">新增耗材</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>名称</th><th>规格</th><th>单位</th><th>数量</th><th>分类</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="consumableList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 危化品标准库 -->
+        <section class="page" id="page-chemicals">
+            <div class="toolbar">
+                <input id="chKeyword" class="input grow" placeholder="搜索危化品名称 / CAS号">
+                <button class="btn btn-primary" onclick="loadChemicals()">查询</button>
+                <button class="btn btn-success" onclick="openChemical()">新增危化品</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>CAS号</th><th>名称</th><th>危险等级</th><th>类别</th><th>单位</th><th>描述</th><th>操作</th></tr></thead>
+                    <tbody id="chemicalList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 废弃物管理 -->
+        <section class="page" id="page-wastes">
+            <div class="toolbar">
+                <select id="wasteStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="0">待审核</option>
+                    <option value="1">已验收</option>
+                    <option value="2">已处置</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadWastes()">查询</button>
+                <button class="btn btn-success" onclick="openWaste()">登记废弃物</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>编号</th><th>类型</th><th>来源</th><th>数量</th><th>登记人</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="wasteList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 诚信管理 -->
+        <section class="page" id="page-credit-manage">
+            <div class="panel" style="max-width: 640px;">
+                <div class="panel-head"><div class="panel-title">手动调整诚信分</div></div>
+                <div class="field"><label>用户</label><select id="cmUser" class="select"></select></div>
+                <div class="field"><label>分数变化（正数加分，负数扣分）</label><input id="cmScore" type="number" class="input" placeholder="如 -10 或 5"></div>
+                <div class="field"><label>原因</label><input id="cmReason" class="input" placeholder="调整原因"></div>
+                <button class="btn btn-primary" onclick="submitCreditAdjust()">确认调整</button>
+            </div>
+            <div class="panel mt-16">
+                <div class="panel-head"><div class="panel-title">诚信评分记录</div></div>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead><tr><th>用户</th><th>类型</th><th>分数变化</th><th>原因</th><th>时间</th></tr></thead>
+                        <tbody id="creditLogList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实验室类型管理 -->
+        <section class="page" id="page-lab-type">
+            <div class="panel" style="max-width: 520px;">
+                <div class="panel-head"><div class="panel-title">新增实验室类型</div></div>
+                <div class="field"><label>类型名称</label><input id="ltName" class="input" placeholder="如 物理实验室"></div>
+                <div class="field"><label>描述</label><input id="ltDesc" class="input" placeholder="类型描述"></div>
+                <button class="btn btn-primary" onclick="saveLabType()">添加类型</button>
+            </div>
+            <div class="table-wrap panel mt-16">
+                <table class="table">
+                    <thead><tr><th>ID</th><th>类型名称</th><th>描述</th><th>操作</th></tr></thead>
+                    <tbody id="labTypeList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 反馈建议管理 -->
+        <section class="page" id="page-feedback-manage">
+            <div class="toolbar">
+                <select id="fbStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="0">待处理</option>
+                    <option value="1">已处理</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadFeedbackManage()">查询</button>
+            </div>
+            <div id="feedbackManageList"></div>
+        </section>
+
+        <!-- 报警管理 -->
+        <section class="page" id="page-alarms">
+            <div class="toolbar">
+                <select id="alStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="0">待处理</option>
+                    <option value="2">已处理</option>
+                </select>
+                <select id="alLevel" class="select">
+                    <option value="">全部级别</option>
+                    <option value="critical">严重</option>
+                    <option value="warning">警告</option>
+                    <option value="info">提示</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadAlarms()">查询</button>
+            </div>
+            <div id="alarmManageList"></div>
+        </section>
+
+        <!-- 仪器管理 -->
+        <section class="page" id="page-instruments">
+            <div class="toolbar">
+                <input id="insKeyword" class="input grow" placeholder="搜索仪器名称 / 编号">
+                <select id="insStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="1">正常</option>
+                    <option value="2">检定中</option>
+                    <option value="3">停用</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadInstruments()">查询</button>
+                <button class="btn btn-success" onclick="openInstrument()">新增仪器</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>仪器编号</th><th>名称</th><th>品牌</th><th>型号</th><th>精度</th><th>位置</th><th>下次检定</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="instrumentList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 知识库 -->
+        <section class="page" id="page-knowledge">
+            <div class="toolbar">
+                <select id="knCategory" class="select">
+                    <option value="">全部分类</option>
+                    <option value="操作规范">操作规范</option>
+                    <option value="安全知识">安全知识</option>
+                    <option value="应急预案">应急预案</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadKnowledge()">查询</button>
+                <button class="btn btn-success" onclick="openKnowledge()">发布知识</button>
+            </div>
+            <div id="knowledgeList"></div>
+        </section>
+
+        <!-- 操作日志 -->
+        <section class="page" id="page-logs">
+            <div class="toolbar">
+                <select id="logModule" class="select">
+                    <option value="">全部模块</option>
+                    <option value="设备借用">设备借用</option>
+                    <option value="借用审批">借用审批</option>
+                    <option value="设备归还">设备归还</option>
+                    <option value="设备损失">设备损失</option>
+                </select>
+                <input id="logKeyword" class="input" placeholder="搜索用户名/动作">
+                <button class="btn btn-primary" onclick="loadLogs()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>用户</th><th>模块</th><th>动作</th><th>详情</th><th>时间</th></tr></thead>
+                    <tbody id="logList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 报废审核 -->
+        <section class="page" id="page-scrap-audit">
+            <div class="toolbar">
+                <select id="scrapAuditStatus" class="select">
+                    <option value="0">待审核</option>
+                    <option value="">全部</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadScrapAudit()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>申请人</th><th>设备编号</th><th>设备名称</th><th>报废理由</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="scrapAuditList"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- 设备编辑模态框 -->
+<div class="modal-mask" id="deviceModal">
+    <div class="modal">
+        <div class="modal-head"><h3 id="dmTitle">新增设备</h3><span class="modal-close" onclick="closeModal('deviceModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="dmId">
+            <div class="field"><label>设备编号</label><input id="dmNo" class="input" placeholder="如 DSO-100"></div>
+            <div class="field"><label>设备名称</label><input id="dmName" class="input" placeholder="设备名称"></div>
+            <div class="field"><label>设备分类</label><select id="dmCategory" class="select"></select></div>
+            <div class="field"><label>品牌</label><input id="dmBrand" class="input" placeholder="如 Rigol、泰克"></div>
+            <div class="field"><label>型号</label><input id="dmModel" class="input" placeholder="规格型号"></div>
+            <div class="field"><label>详细规格</label><input id="dmSpec" class="input" placeholder="如 100MHz带宽，4通道"></div>
+            <div class="field"><label>存放位置</label><input id="dmLocation" class="input" placeholder="如 A-101"></div>
+            <div class="field"><label>采购日期</label><input id="dmPurchase" type="date" class="input"></div>
+            <div class="field"><label>状态</label><select id="dmStatus" class="select">
+                <option value="1">可借</option><option value="2">已借出</option><option value="3">维修中</option><option value="4">报废</option>
+            </select></div>
+            <div class="field"><label>图片URL</label><input id="dmImage" class="input" placeholder="如 /images/device_xxx.png"></div>
+            <div class="field"><label>备注</label><input id="dmRemark" class="input" placeholder="备注信息"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('deviceModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveDevice()">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 分类管理模态框 -->
+<div class="modal-mask" id="categoryModal">
+    <div class="modal">
+        <div class="modal-head"><h3>设备分类管理</h3><span class="modal-close" onclick="closeModal('categoryModal')">&times;</span></div>
+        <div class="modal-body">
+            <div class="field"><label>分类名称</label><input id="cgName" class="input" placeholder="分类名称"></div>
+            <div class="field"><label>分类描述</label><input id="cgDesc" class="input" placeholder="分类描述"></div>
+            <button class="btn btn-primary btn-sm" onclick="saveCategory()">添加分类</button>
+            <div class="mt-16">
+                <table class="table"><thead><tr><th>ID</th><th>名称</th><th>描述</th><th>操作</th></tr></thead><tbody id="cgList"></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 审批模态框 -->
+<div class="modal-mask" id="approveModal">
+    <div class="modal">
+        <div class="modal-head"><h3>审批借用申请</h3><span class="modal-close" onclick="closeModal('approveModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="apId">
+            <div id="apInfo" class="text-muted" style="font-size:13px; line-height:1.9;"></div>
+            <div class="field mt-16"><label>审批意见</label><textarea id="apRemark" class="textarea" placeholder="审批意见（拒绝时建议填写原因）"></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-danger" onclick="doApprove(2)">拒绝</button>
+            <button class="btn btn-success" onclick="doApprove(1)">通过</button>
+        </div>
+    </div>
+</div>
+
+<!-- 归还模态框 -->
+<div class="modal-mask" id="returnModal">
+    <div class="modal">
+        <div class="modal-head"><h3>确认归还</h3><span class="modal-close" onclick="closeModal('returnModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="rtId">
+            <div class="field"><label>归还备注</label><input id="rtRemark" class="input" placeholder="归还备注（可选）"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('returnModal')">取消</button>
+            <button class="btn btn-primary" onclick="doReturn()">确认归还</button>
+        </div>
+    </div>
+</div>
+
+<!-- 报修处理模态框 -->
+<div class="modal-mask" id="repairModal">
+    <div class="modal">
+        <div class="modal-head"><h3>处理报修工单</h3><span class="modal-close" onclick="closeModal('repairModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="rpId">
+            <div id="rpInfo" class="text-muted" style="font-size:13px; line-height:1.9;"></div>
+            <div class="field mt-16"><label>处理结果</label><textarea id="rpResult" class="textarea" placeholder="填写处理结果"></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="doHandleRepair(1)">标记维修中</button>
+            <button class="btn btn-primary" onclick="doHandleRepair(2)">完成维修</button>
+        </div>
+    </div>
+</div>
+
+<!-- 公告发布模态框 -->
+<div class="modal-mask" id="noticeModal">
+    <div class="modal">
+        <div class="modal-head"><h3>发布公告</h3><span class="modal-close" onclick="closeModal('noticeModal')">&times;</span></div>
+        <div class="modal-body">
+            <div class="field"><label>公告标题</label><input id="ntTitle" class="input" placeholder="公告标题"></div>
+            <div class="field"><label>公告内容</label><textarea id="ntContent" class="textarea" style="min-height:140px;" placeholder="公告内容"></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('noticeModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveNotice()">发布</button>
+        </div>
+    </div>
+</div>
+
+<!-- 用户编辑模态框 -->
+<div class="modal-mask" id="userModal">
+    <div class="modal">
+        <div class="modal-head"><h3 id="umTitle">新增用户</h3><span class="modal-close" onclick="closeModal('userModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="umId">
+            <div class="field"><label>用户名</label><input id="umUsername" class="input" placeholder="登录账号"></div>
+            <div class="field"><label>姓名</label><input id="umRealName" class="input" placeholder="真实姓名"></div>
+            <div class="field"><label>角色</label><select id="umRole" class="select"></select></div>
+            <div class="field"><label>手机号</label><input id="umPhone" class="input" placeholder="联系电话"></div>
+            <div class="field"><label>邮箱</label><input id="umEmail" class="input" placeholder="电子邮箱"></div>
+            <div class="field" id="umPasswordField"><label>密码</label><input id="umPassword" type="password" class="input" placeholder="初始密码（默认123456）"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('userModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveUser()">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 实验室编辑模态框 -->
+<div class="modal-mask" id="labModal">
+    <div class="modal">
+        <div class="modal-head"><h3 id="lmTitle">新增实验室</h3><span class="modal-close" onclick="closeModal('labModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="lmId">
+            <div class="field"><label>名称</label><input id="lmName" class="input" placeholder="实验室名称"></div>
+            <div class="field"><label>类型</label><select id="lmType" class="select"></select></div>
+            <div class="field"><label>位置</label><input id="lmLocation" class="input" placeholder="如 实验楼1层101"></div>
+            <div class="field"><label>容量</label><input id="lmCapacity" type="number" class="input" placeholder="可容纳人数"></div>
+            <div class="field"><label>负责人</label><input id="lmManager" class="input" placeholder="负责人姓名"></div>
+            <div class="field"><label>图片URL</label><input id="lmImage" class="input" placeholder="如 /images/lab_xxx.png"></div>
+            <div class="field"><label>描述</label><input id="lmDesc" class="input" placeholder="实验室描述"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('labModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveLab()">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 耗材编辑模态框 -->
+<div class="modal-mask" id="consumableModal">
+    <div class="modal">
+        <div class="modal-head"><h3 id="csmTitle">新增耗材</h3><span class="modal-close" onclick="closeModal('consumableModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="csmId">
+            <div class="field"><label>名称</label><input id="csmName" class="input" placeholder="耗材名称"></div>
+            <div class="field"><label>规格</label><input id="csmSpec" class="input" placeholder="规格型号"></div>
+            <div class="field"><label>单位</label><input id="csmUnit" class="input" placeholder="如 个/支/盒"></div>
+            <div class="field"><label>数量</label><input id="csmQuantity" type="number" class="input" placeholder="库存数量"></div>
+            <div class="field"><label>分类</label><input id="csmCategory" class="input" placeholder="耗材分类"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('consumableModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveConsumable()">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 危化品编辑模态框 -->
+<div class="modal-mask" id="chemicalModal">
+    <div class="modal">
+        <div class="modal-head"><h3 id="chmTitle">新增危化品</h3><span class="modal-close" onclick="closeModal('chemicalModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="chmId">
+            <div class="field"><label>CAS号</label><input id="chmCas" class="input" placeholder="如 64-19-7"></div>
+            <div class="field"><label>名称</label><input id="chmName" class="input" placeholder="危化品名称"></div>
+            <div class="field"><label>危险等级</label><select id="chmRisk" class="select"><option>低</option><option>中</option><option>高</option></select></div>
+            <div class="field"><label>类别</label><input id="chmCategory" class="input" placeholder="如 酸类/碱类/醇类"></div>
+            <div class="field"><label>单位</label><input id="chmUnit" class="input" placeholder="如 瓶"></div>
+            <div class="field"><label>描述</label><input id="chmDesc" class="input" placeholder="危化品描述"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('chemicalModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveChemical()">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 仪器编辑模态框 -->
+<div class="modal-mask" id="instrumentModal">
+    <div class="modal" style="width:min(640px,100%);">
+        <div class="modal-head"><h3 id="imTitle">新增仪器</h3><span class="modal-close" onclick="closeModal('instrumentModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="imId">
+            <div class="field"><label>仪器编号</label><input id="imNo" class="input" placeholder="如 INS-001"></div>
+            <div class="field"><label>名称</label><input id="imName" class="input" placeholder="仪器名称"></div>
+            <div class="field"><label>品牌</label><input id="imBrand" class="input" placeholder="品牌"></div>
+            <div class="field"><label>型号</label><input id="imModel" class="input" placeholder="规格型号"></div>
+            <div class="field"><label>精度</label><input id="imAccuracy" class="input" placeholder="如 ±0.1mg"></div>
+            <div class="field"><label>出厂编号</label><input id="imSerial" class="input" placeholder="出厂编号"></div>
+            <div class="field"><label>位置</label><input id="imLocation" class="input" placeholder="存放位置"></div>
+            <div class="field"><label>上次检定日期</label><input id="imLastCheck" type="date" class="input"></div>
+            <div class="field"><label>下次检定日期</label><input id="imNextCheck" type="date" class="input"></div>
+            <div class="field"><label>状态</label><select id="imStatus" class="select">
+                <option value="1">正常</option><option value="2">检定中</option><option value="3">停用</option><option value="4">报废</option>
+            </select></div>
+            <div class="field"><label>描述</label><input id="imDesc" class="input" placeholder="仪器描述"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('instrumentModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveInstrument()">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 知识库编辑模态框 -->
+<div class="modal-mask" id="knowledgeModal">
+    <div class="modal">
+        <div class="modal-head"><h3>发布知识</h3><span class="modal-close" onclick="closeModal('knowledgeModal')">&times;</span></div>
+        <div class="modal-body">
+            <div class="field"><label>分类</label>
+                <select id="knCategoryEdit" class="select">
+                    <option value="操作规范">操作规范</option>
+                    <option value="安全知识">安全知识</option>
+                    <option value="应急预案">应急预案</option>
+                </select>
+            </div>
+            <div class="field"><label>标题</label><input id="knTitle" class="input" placeholder="知识标题"></div>
+            <div class="field"><label>内容</label><textarea id="knContent" class="textarea" style="min-height:160px;" placeholder="详细描述..."></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('knowledgeModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveKnowledge()">发布</button>
+        </div>
+    </div>
+</div>
+
+<!-- 报警处理模态框 -->
+<div class="modal-mask" id="alarmHandleModal">
+    <div class="modal">
+        <div class="modal-head"><h3>处理报警</h3><span class="modal-close" onclick="closeModal('alarmHandleModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="ahId">
+            <div id="ahInfo" class="text-muted" style="font-size:13px; line-height:1.7; margin-bottom:14px;"></div>
+            <div class="field"><label>处理结果</label><textarea id="ahRemark" class="textarea" placeholder="请填写处理措施及结果"></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('alarmHandleModal')">取消</button>
+            <button class="btn btn-primary" onclick="submitAlarmHandle(2)">标记已处理</button>
+        </div>
+    </div>
+</div>
+        <div class="modal-body">
+            <div class="field"><label>类型</label><input id="wmType" class="input" placeholder="如 化学废液/废旧电池"></div>
+            <div class="field"><label>来源</label><input id="wmSource" class="input" placeholder="如 化学实验室B"></div>
+            <div class="field"><label>数量</label><input id="wmQuantity" type="number" class="input" placeholder="数量"></div>
+            <div class="field"><label>单位</label><input id="wmUnit" class="input" placeholder="如 升/千克/个"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('wasteModal')">取消</button>
+            <button class="btn btn-primary" onclick="submitWaste()">提交登记</button>
+        </div>
+    </div>
+</div>
+
+<!-- 废弃物登记模态框 -->
+<div class="modal-mask" id="wasteModal">
+    <div class="modal">
+        <div class="modal-head"><h3>登记废弃物</h3><span class="modal-close" onclick="closeModal('wasteModal')">&times;</span></div>
+        <div class="modal-body">
+            <div class="field"><label>类型</label><input id="wmType" class="input" placeholder="如 化学废液/废旧电池"></div>
+            <div class="field"><label>来源</label><input id="wmSource" class="input" placeholder="如 化学实验室B"></div>
+            <div class="field"><label>数量</label><input id="wmQuantity" type="number" class="input" placeholder="数量"></div>
+            <div class="field"><label>单位</label><input id="wmUnit" class="input" placeholder="如 升/千克/个"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('wasteModal')">取消</button>
+            <button class="btn btn-primary" onclick="submitWaste()">提交登记</button>
+        </div>
+    </div>
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+    const USER = requireLogin(['ADMIN', 'DEPARTMENT_HEAD']) ? getLoginUser() : null;
+    const IS_ADMIN = true;
+    let rolesCache = [];
+    let deviceChart, recordChart, applyChart, repairChart;
+
+    const pageTitles = {
+        overview: ['综合统计面板', '实验室与设备运行数据总览'],
+        devices: ['设备管理', '设备台账与分类维护'],
+        approve: ['借用审批', '审批学生的设备借用申请'],
+        records: ['借用记录', '设备借用与归还流转记录'],
+        overdue: ['逾期管理', '管理逾期未归还的借用记录'],
+        repairs: ['报修处理', '处理设备报修工单'],
+        notices: ['公告管理', '发布与维护系统公告'],
+        users: ['用户管理', '系统用户与角色权限管理'],
+        'lab-manage': ['实验室管理', '维护实验室信息'],
+        'lab-audit': ['实验室预约审核', '审核实验室预约申请'],
+        'dev-reserve-audit': ['设备预约审核', '审核设备预约申请'],
+        'purchase-manage': ['采购管理', '审核设备采购申请'],
+        consumables: ['耗材管理', '管理实验室耗材'],
+        chemicals: ['危化品标准库', '维护危化品标准库'],
+        wastes: ['废弃物管理', '废弃物审核验收与处置'],
+        'credit-manage': ['诚信管理', '管理用户诚信评分'],
+        'lab-type': ['实验室类型', '维护实验室类型'],
+        'feedback-manage': ['反馈建议', '处理用户反馈建议'],
+        alarms: ['报警管理', '处理实验室报警与告警'],
+        instruments: ['仪器管理', '管理仪器与检定'],
+        knowledge: ['知识库', '维护实验操作与安全知识'],
+        logs: ['操作日志', '查看系统操作记录'],
+        'scrap-audit': ['报废审核', '审核设备报废申请']
+    };
+
+    function switchPage(page) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+        document.getElementById('pageTitle').innerText = pageTitles[page][0];
+        document.getElementById('pageSub').innerText = pageTitles[page][1];
+        document.getElementById('sidebar').classList.remove('open');
+        const loaders = {
+            overview: loadOverview, devices: loadDevices, approve: loadApplies,
+            records: loadRecords, overdue: loadOverdue, repairs: loadRepairs, notices: loadNotices, users: loadUsers,
+            'lab-manage': loadLabManage, 'lab-audit': loadLabAudit,
+            'dev-reserve-audit': loadDevReserveAudit, 'purchase-manage': loadPurchaseManage,
+            consumables: loadConsumables, chemicals: loadChemicals, wastes: loadWastes,
+            'credit-manage': loadCreditManage, 'lab-type': loadLabType, 'feedback-manage': loadFeedbackManage,
+            alarms: loadAlarms, instruments: loadInstruments, knowledge: loadKnowledge,
+            logs: loadLogs, 'scrap-audit': loadScrapAudit
+        };
+        if (loaders[page]) Promise.resolve(loaders[page]()).catch(e => handleApiError(e));
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function initUser() {
+        if (!USER) return;
+        document.getElementById('uName').innerText = USER.realName || USER.username;
+        document.getElementById('uRole').innerText = roleCodeToName(USER.roleCode);
+        document.getElementById('avatar').innerText = (USER.realName || USER.username || 'A').charAt(0).toUpperCase();
+        if (!IS_ADMIN) {
+            const nav = document.getElementById('navUsers');
+            if (nav) nav.style.display = 'none';
+        }
+    }
+
+    function statusBadge(s) {
+        const map = { 1: 'badge-green', 2: 'badge-blue', 3: 'badge-yellow', 4: 'badge-red', 0: 'badge-gray' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusDevice(s)}</span>`;
+    }
+    function applyBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-green', 2: 'badge-red' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusApply(s)}</span>`;
+    }
+    function recordBadge(s) {
+        const map = { 1: 'badge-blue', 2: 'badge-green', 3: 'badge-red' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusRecord(s)}</span>`;
+    }
+    function repairBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-blue', 2: 'badge-green' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusRepair(s)}</span>`;
+    }
+    function userStatusBadge(s) {
+        return s === 1
+            ? '<span class="badge badge-green"><span class="badge-dot"></span>正常</span>'
+            : '<span class="badge badge-red"><span class="badge-dot"></span>冻结</span>';
+    }
+
+    const CHART_COLORS = ['#22d3ee', '#3b82f6', '#fbbf24', '#f87171', '#8b5cf6'];
+
+    async function loadOverview() {
+        let d;
+        try {
+            d = await Api.getDashboard();
+        } catch (e) {
+            // 兼容旧接口
+            const s = await Api.getStats();
+            d = {
+                labRoomCount: 0, deviceCount: s.deviceTotal || 0,
+                availableDevices: s.availableDevices, borrowedDevices: s.borrowedDevices,
+                repairingDevices: s.repairingDevices, pendingApplies: s.pendingApplies,
+                borrowingRecords: s.borrowingRecords, pendingRepairs: s.pendingRepairs,
+                labUsage: []
+            };
+        }
+        const disabled = Math.max(0, (d.deviceCount || 0) - (d.availableDevices || 0) - (d.borrowedDevices || 0) - (d.repairingDevices || 0));
+        const stats = [
+            { label: '实验室总数', value: d.labRoomCount || 0, cls: 'stat-accent-1' },
+            { label: '设备总数', value: d.deviceCount || 0, cls: 'stat-accent-1' },
+            { label: '可借设备', value: d.availableDevices || 0, cls: 'stat-accent-4' },
+            { label: '已借出', value: d.borrowedDevices || 0, cls: 'stat-accent-2' },
+            { label: '待审批申请', value: d.pendingApplies || 0, cls: 'stat-accent-3' },
+            { label: '待处理报修', value: d.pendingRepairs || 0, cls: 'stat-accent-5' }
+        ];
+        document.getElementById('ovStats').innerHTML = stats.map(st =>
+            `<div class="stat-card ${st.cls}"><div class="stat-label">${st.label}</div><div class="stat-value">${st.value}</div></div>`).join('');
+
+        renderDeviceChart([d.availableDevices || 0, d.borrowedDevices || 0, d.repairingDevices || 0, disabled]);
+        renderRecordChart([d.borrowingRecords || 0, d.overdueRecords || 0, d.returnedRecords || 0]);
+
+        const applies = await Api.getApplies();
+        renderApplyChart([
+            applies.filter(a => a.status === 0).length,
+            applies.filter(a => a.status === 1).length,
+            applies.filter(a => a.status === 2).length
+        ]);
+
+        const repairs = await Api.getRepairs();
+        renderRepairChart([
+            repairs.filter(r => r.status === 0).length,
+            repairs.filter(r => r.status === 1).length,
+            repairs.filter(r => r.status === 2).length
+        ]);
+
+        // 实验室使用率表格
+        const labUsage = d.labUsage || [];
+        const labUsageBox = document.getElementById('labUsageBox');
+        if (labUsageBox) {
+            labUsageBox.innerHTML = labUsage.length
+                ? labUsage.map(l => {
+                    const rate = l.capacity ? Math.min(100, Math.round(l.reservationCount * 100 / l.capacity)) : 0;
+                    return `<div class="flex-between" style="padding:8px 0;border-bottom:1px solid rgba(148,163,184,0.08);">
+                        <span style="width:120px;">${esc(l.name)}</span>
+                        <div style="flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;margin:0 12px;overflow:hidden;">
+                            <div style="height:100%;width:${rate}%;background:linear-gradient(90deg,#22d3ee,#3b82f6);border-radius:4px;"></div>
+                        </div>
+                        <span class="mono" style="width:70px;text-align:right;">${rate}%</span>
+                    </div>`;
+                }).join('')
+                : '<div class="empty-state"><p>暂无实验室数据</p></div>';
+        }
+
+        setTimeout(() => {
+            [deviceChart, recordChart, applyChart, repairChart].forEach(c => c && c.resize());
+        }, 60);
+    }
+
+    function renderDeviceChart(data) {
+        if (!deviceChart) deviceChart = echarts.init(document.getElementById('deviceChart'));
+        deviceChart.setOption({
+            backgroundColor: 'transparent',
+            tooltip: { trigger: 'item' },
+            legend: { bottom: 0, textStyle: { color: '#8b98ad' } },
+            series: [{
+                type: 'pie', radius: ['45%', '68%'],
+                itemStyle: { borderColor: '#0b1120', borderWidth: 2 },
+                label: { color: '#e6edf7' },
+                data: [
+                    { value: data[0], name: '可借', itemStyle: { color: '#34d399' } },
+                    { value: data[1], name: '已借出', itemStyle: { color: '#3b82f6' } },
+                    { value: data[2], name: '维修中', itemStyle: { color: '#fbbf24' } },
+                    { value: data[3], name: '报废', itemStyle: { color: '#f87171' } }
+                ]
+            }]
+        });
+    }
+
+    function renderRecordChart(data) {
+        if (!recordChart) recordChart = echarts.init(document.getElementById('recordChart'));
+        recordChart.setOption({
+            backgroundColor: 'transparent',
+            tooltip: { trigger: 'axis' },
+            grid: { left: 40, right: 16, top: 20, bottom: 30 },
+            xAxis: { type: 'category', data: ['借用中', '逾期', '已归还'], axisLine: { lineStyle: { color: '#334155' } }, axisLabel: { color: '#8b98ad' } },
+            yAxis: { type: 'value', splitLine: { lineStyle: { color: 'rgba(148,163,184,0.1)' } }, axisLabel: { color: '#8b98ad' } },
+            series: [{
+                type: 'bar', barWidth: 36,
+                itemStyle: { borderRadius: [6, 6, 0, 0] },
+                data: [
+                    { value: data[0], itemStyle: { color: '#3b82f6' } },
+                    { value: data[1], itemStyle: { color: '#f87171' } },
+                    { value: data[2], itemStyle: { color: '#34d399' } }
+                ]
+            }]
+        });
+    }
+
+    function renderApplyChart(data) {
+        if (!applyChart) applyChart = echarts.init(document.getElementById('applyChart'));
+        applyChart.setOption({
+            backgroundColor: 'transparent',
+            tooltip: { trigger: 'item' },
+            legend: { bottom: 0, textStyle: { color: '#8b98ad' } },
+            series: [{
+                type: 'pie', radius: ['45%', '68%'],
+                itemStyle: { borderColor: '#0b1120', borderWidth: 2 },
+                label: { color: '#e6edf7' },
+                data: [
+                    { value: data[0], name: '待审批', itemStyle: { color: '#fbbf24' } },
+                    { value: data[1], name: '已通过', itemStyle: { color: '#34d399' } },
+                    { value: data[2], name: '已拒绝', itemStyle: { color: '#f87171' } }
+                ]
+            }]
+        });
+    }
+
+    function renderRepairChart(data) {
+        if (!repairChart) repairChart = echarts.init(document.getElementById('repairChart'));
+        repairChart.setOption({
+            backgroundColor: 'transparent',
+            tooltip: { trigger: 'item' },
+            legend: { bottom: 0, textStyle: { color: '#8b98ad' } },
+            series: [{
+                type: 'pie', radius: ['45%', '68%'],
+                itemStyle: { borderColor: '#0b1120', borderWidth: 2 },
+                label: { color: '#e6edf7' },
+                data: [
+                    { value: data[0], name: '待处理', itemStyle: { color: '#fbbf24' } },
+                    { value: data[1], name: '维修中', itemStyle: { color: '#3b82f6' } },
+                    { value: data[2], name: '已完成', itemStyle: { color: '#34d399' } }
+                ]
+            }]
+        });
+    }
+
+    async function loadDevices() {
+        const keyword = document.getElementById('devKeyword').value.trim();
+        const status = document.getElementById('devStatus').value;
+        const devices = await Api.getDevices(keyword, status);
+        const tbody = document.getElementById('devList');
+        if (!devices.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无设备数据</td></tr>'; return; }
+        tbody.innerHTML = devices.map(d => `
+            <tr>
+                <td class="mono">${esc(d.deviceNo)}</td>
+                <td>${esc(d.name)}</td>
+                <td>${esc(d.categoryName || '-')}</td>
+                <td>${esc(d.model || '-')}</td>
+                <td>${esc(d.location || '-')}</td>
+                <td>${statusBadge(d.status)}</td>
+                <td>
+                    <button class="btn btn-ghost btn-sm" onclick='openDevice(${JSON.stringify(d)})'>编辑</button>
+                    ${IS_ADMIN ? `<button class="btn btn-danger btn-sm" onclick="delDevice(${d.id})">删除</button>` : ''}
+                </td>
+            </tr>`).join('');
+    }
+
+    async function loadCategories() {
+        const cats = await Api.getCategories();
+        const sel = document.getElementById('dmCategory');
+        sel.innerHTML = cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+        const cgList = document.getElementById('cgList');
+        cgList.innerHTML = cats.map(c => `
+            <tr><td>${c.id}</td><td>${esc(c.name)}</td><td>${esc(c.description || '-')}</td>
+            <td>${IS_ADMIN ? `<button class="btn btn-danger btn-sm" onclick="delCategory(${c.id})">删除</button>` : ''}</td></tr>`).join('');
+    }
+
+    function openDevice(d) {
+        document.getElementById('dmTitle').innerText = d ? '编辑设备' : '新增设备';
+        document.getElementById('dmId').value = d ? d.id : '';
+        document.getElementById('dmNo').value = d ? d.deviceNo : '';
+        document.getElementById('dmName').value = d ? d.name : '';
+        document.getElementById('dmBrand').value = d ? (d.brand || '') : '';
+        document.getElementById('dmModel').value = d ? (d.model || '') : '';
+        document.getElementById('dmSpec').value = d ? (d.specification || '') : '';
+        document.getElementById('dmLocation').value = d ? (d.location || '') : '';
+        document.getElementById('dmPurchase').value = d && d.purchaseDate ? String(d.purchaseDate).slice(0, 10) : '';
+        document.getElementById('dmStatus').value = d ? d.status : 1;
+        document.getElementById('dmImage').value = d ? (d.imageUrl || '') : '';
+        document.getElementById('dmRemark').value = d ? (d.description || d.remark || '') : '';
+        if (d) document.getElementById('dmCategory').value = d.categoryId;
+        loadCategories().then(() => { if (d) document.getElementById('dmCategory').value = d.categoryId; });
+        openModal('deviceModal');
+    }
+
+    async function saveDevice() {
+        const payload = {
+            id: document.getElementById('dmId').value || null,
+            deviceNo: document.getElementById('dmNo').value.trim(),
+            deviceName: document.getElementById('dmName').value.trim(),
+            categoryId: Number(document.getElementById('dmCategory').value),
+            brand: document.getElementById('dmBrand').value.trim(),
+            model: document.getElementById('dmModel').value.trim(),
+            specification: document.getElementById('dmSpec').value.trim(),
+            location: document.getElementById('dmLocation').value.trim(),
+            status: Number(document.getElementById('dmStatus').value),
+            purchaseDate: document.getElementById('dmPurchase').value || null,
+            imageUrl: document.getElementById('dmImage').value.trim(),
+            description: document.getElementById('dmRemark').value.trim()
+        };
+        if (!payload.deviceNo || !payload.deviceName) { toast('请填写设备编号和名称', 'error'); return; }
+        try {
+            await Api.saveDevice(payload, payload.id);
+            toast('设备已保存');
+            closeModal('deviceModal');
+            loadDevices();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delDevice(id) {
+        if (!await confirmDialog('确认删除该设备？删除后不可恢复。', '删除设备')) return;
+        try { await Api.deleteDevice(id); toast('已删除'); loadDevices(); } catch (e) { handleApiError(e); }
+    }
+
+    async function openCategory() {
+        await loadCategories();
+        document.getElementById('cgName').value = '';
+        document.getElementById('cgDesc').value = '';
+        openModal('categoryModal');
+    }
+
+    async function saveCategory() {
+        const name = document.getElementById('cgName').value.trim();
+        if (!name) { toast('请填写分类名称', 'error'); return; }
+        try {
+            await Api.saveCategory({ name, description: document.getElementById('cgDesc').value.trim() });
+            toast('分类已添加');
+            loadCategories();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delCategory(id) {
+        if (!await confirmDialog('确认删除该分类？请先确保该分类下无设备。', '删除分类')) return;
+        try { await Api.deleteCategory(id); toast('已删除'); loadCategories(); } catch (e) { handleApiError(e); }
+    }
+
+    async function loadApplies() {
+        const status = document.getElementById('apStatus').value;
+        const list = await Api.getApplies(status);
+        const tbody = document.getElementById('applyList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无申请记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(a => `
+            <tr>
+                <td>${esc(a.userName)}</td>
+                <td class="mono">${esc(a.deviceNo)}</td>
+                <td>${esc(a.deviceName)}</td>
+                <td>${esc(a.applyReason)}</td>
+                <td>${esc(a.expectedReturnTime)}</td>
+                <td>${applyBadge(a.status)}</td>
+                <td>${a.status === 0 ? `<button class="btn btn-primary btn-sm" onclick='openApprove(${JSON.stringify(a)})'>审批</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    function openApprove(a) {
+        document.getElementById('apId').value = a.id;
+        document.getElementById('apInfo').innerHTML =
+            `<b>申请人：</b>${esc(a.userName)}<br>` +
+            `<b>设备：</b>${esc(a.deviceName)}（${esc(a.deviceNo)}）<br>` +
+            `<b>申请理由：</b>${esc(a.applyReason)}<br>` +
+            `<b>预计归还：</b>${esc(a.expectedReturnTime)}`;
+        document.getElementById('apRemark').value = '';
+        openModal('approveModal');
+    }
+
+    async function doApprove(approved) {
+        const id = document.getElementById('apId').value;
+        const remark = document.getElementById('apRemark').value.trim();
+        try {
+            await Api.approveBorrow(Number(id), approved, remark || (approved ? '同意借用' : '拒绝借用'));
+            toast(approved ? '已通过申请' : '已拒绝申请');
+            closeModal('approveModal');
+            loadApplies();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadRecords() {
+        const status = document.getElementById('rcStatus').value;
+        const list = await Api.getRecords(status);
+        const tbody = document.getElementById('recordList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无借用记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td>
+                <td class="mono">${esc(r.deviceNo)}</td>
+                <td>${esc(r.deviceName)}</td>
+                <td>${esc(r.borrowTime)}</td>
+                <td>${esc(r.returnTime)}</td>
+                <td>${recordBadge(r.status)}</td>
+                <td>${(r.status === 1 || r.status === 3) ? `<button class="btn btn-primary btn-sm" onclick="openReturn(${r.id})">归还</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    function openReturn(id) {
+        document.getElementById('rtId').value = id;
+        document.getElementById('rtRemark').value = '';
+        openModal('returnModal');
+    }
+
+    async function doReturn() {
+        const id = document.getElementById('rtId').value;
+        const remark = document.getElementById('rtRemark').value.trim();
+        try {
+            await Api.returnDevice(Number(id), remark);
+            toast('设备已归还');
+            closeModal('returnModal');
+            loadRecords();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadOverdue() {
+        const list = await Api.getOverdueRecords();
+        const tbody = document.getElementById('overdueList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">暂无逾期记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td>
+                <td class="mono">${esc(r.deviceNo)}</td>
+                <td>${esc(r.deviceName)}</td>
+                <td>${esc(r.borrowTime)}</td>
+                <td>${recordBadge(r.status)}</td>
+                <td><button class="btn btn-primary btn-sm" onclick="openReturn(${r.id})">归还</button></td>
+            </tr>`).join('');
+    }
+
+    async function doRefreshOverdue() {
+        try {
+            const r = await Api.refreshOverdue();
+            toast('已刷新逾期状态，更新 ' + (r.updated || 0) + ' 条');
+            loadOverdue();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadRepairs() {
+        const status = document.getElementById('rpStatus').value;
+        const list = await Api.getRepairs(status);
+        const tbody = document.getElementById('repairList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无报修工单</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td>
+                <td class="mono">${esc(r.deviceNo)}</td>
+                <td>${esc(r.deviceName)}</td>
+                <td>${esc(r.faultDesc)}</td>
+                <td>${esc(r.reportTime)}</td>
+                <td>${repairBadge(r.status)}</td>
+                <td>${r.status !== 2 ? `<button class="btn btn-primary btn-sm" onclick='openRepair(${JSON.stringify(r)})'>处理</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    function openRepair(r) {
+        document.getElementById('rpId').value = r.id;
+        document.getElementById('rpInfo').innerHTML =
+            `<b>报修人：</b>${esc(r.userName)}<br>` +
+            `<b>设备：</b>${esc(r.deviceName)}（${esc(r.deviceNo)}）<br>` +
+            `<b>故障描述：</b>${esc(r.faultDesc)}`;
+        document.getElementById('rpResult').value = r.handleResult || '';
+        openModal('repairModal');
+    }
+
+    async function doHandleRepair(status) {
+        const id = document.getElementById('rpId').value;
+        const result = document.getElementById('rpResult').value.trim();
+        try {
+            await Api.handleRepair(Number(id), status, result);
+            toast(status === 2 ? '维修已完成' : '已标记维修中');
+            closeModal('repairModal');
+            loadRepairs();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadNotices() {
+        const list = await Api.getNotices();
+        const tbody = document.getElementById('noticeList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty">暂无公告</td></tr>'; return; }
+        tbody.innerHTML = list.map(n => `
+            <tr>
+                <td>${esc(n.title)}</td>
+                <td>${esc(n.publisherName)}</td>
+                <td>${esc(n.publishTime)}</td>
+                <td>${IS_ADMIN ? `<button class="btn btn-danger btn-sm" onclick="delNotice(${n.id})">删除</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    function openNotice() {
+        document.getElementById('ntTitle').value = '';
+        document.getElementById('ntContent').value = '';
+        openModal('noticeModal');
+    }
+
+    async function saveNotice() {
+        const title = document.getElementById('ntTitle').value.trim();
+        const content = document.getElementById('ntContent').value.trim();
+        if (!title || !content) { toast('请填写公告标题和内容', 'error'); return; }
+        try {
+            await Api.publishNotice(title, content);
+            toast('公告已发布');
+            closeModal('noticeModal');
+            loadNotices();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delNotice(id) {
+        if (!await confirmDialog('确认删除该公告？删除后不可恢复。', '删除公告')) return;
+        try { await Api.deleteNotice(id); toast('已删除'); loadNotices(); } catch (e) { handleApiError(e); }
+    }
+
+    async function loadUsers() {
+        const keyword = document.getElementById('usKeyword').value.trim();
+        const roleId = document.getElementById('usRole').value;
+        const list = await Api.getUsers(keyword, roleId);
+        const tbody = document.getElementById('userList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无用户</td></tr>'; return; }
+        tbody.innerHTML = list.map(u => `
+            <tr>
+                <td>${esc(u.username)}</td>
+                <td>${esc(u.realName || '-')}</td>
+                <td>${esc(u.roleName || '-')}</td>
+                <td>${esc(u.phone || '-')}</td>
+                <td>${esc(u.email || '-')}</td>
+                <td>${userStatusBadge(u.status)}</td>
+                <td>
+                    <button class="btn btn-ghost btn-sm" onclick='openUser(${JSON.stringify(u)})'>编辑</button>
+                    <button class="btn btn-ghost btn-sm" onclick="toggleUser(${u.id}, ${u.status})">${u.status === 1 ? '冻结' : '解冻'}</button>
+                    <button class="btn btn-ghost btn-sm" onclick="resetPwd(${u.id})">重置密码</button>
+                </td>
+            </tr>`).join('');
+    }
+
+    async function loadRoles() {
+        rolesCache = await Api.getRoles();
+        const usSel = document.getElementById('usRole');
+        usSel.innerHTML = '<option value="">全部角色</option>' + rolesCache.map(r => `<option value="${r.id}">${esc(r.roleName)}</option>`).join('');
+        const umSel = document.getElementById('umRole');
+        umSel.innerHTML = rolesCache.map(r => `<option value="${r.id}">${esc(r.roleName)}</option>`).join('');
+    }
+
+    function openUser(u) {
+        document.getElementById('umTitle').innerText = u ? '编辑用户' : '新增用户';
+        document.getElementById('umId').value = u ? u.id : '';
+        document.getElementById('umUsername').value = u ? u.username : '';
+        document.getElementById('umUsername').disabled = !!u;
+        document.getElementById('umRealName').value = u ? (u.realName || '') : '';
+        document.getElementById('umPhone').value = u ? (u.phone || '') : '';
+        document.getElementById('umEmail').value = u ? (u.email || '') : '';
+        document.getElementById('umPassword').value = '';
+        document.getElementById('umPasswordField').style.display = u ? 'none' : '';
+        if (u) document.getElementById('umRole').value = u.roleId;
+        openModal('userModal');
+    }
+
+    async function saveUser() {
+        const payload = {
+            id: document.getElementById('umId').value || null,
+            username: document.getElementById('umUsername').value.trim(),
+            realName: document.getElementById('umRealName').value.trim(),
+            phone: document.getElementById('umPhone').value.trim(),
+            email: document.getElementById('umEmail').value.trim(),
+            roleId: Number(document.getElementById('umRole').value),
+            password: document.getElementById('umPassword').value
+        };
+        if (!payload.username) { toast('请填写用户名', 'error'); return; }
+        if (!payload.roleId) { toast('请选择角色', 'error'); return; }
+        try {
+            await Api.saveUser(payload);
+            toast('用户已保存');
+            closeModal('userModal');
+            loadUsers();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function toggleUser(id, status) {
+        try { await Api.toggleUserStatus(id, status); toast('状态已更新'); loadUsers(); } catch (e) { handleApiError(e); }
+    }
+
+    async function resetPwd(id) {
+        if (!await confirmDialog('确认将该用户密码重置为 123456？', '重置密码', 'info')) return;
+        try { await Api.resetUserPassword(id); toast('密码已重置为 123456'); } catch (e) { handleApiError(e); }
+    }
+
+    // ==================== 综合管理模块 ====================
+
+    // ---------- 实验室管理 ----------
+    async function loadLabManage() {
+        const labs = await Api.getLabs();
+        const tbody = document.getElementById('labManageList');
+        if (!labs.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无实验室</td></tr>'; return; }
+        tbody.innerHTML = labs.map(l => `
+            <tr>
+                <td>${esc(l.name)}</td><td>${esc(l.location || '-')}</td><td>${l.capacity || 0}</td>
+                <td>${esc(l.manager || '-')}</td><td>${esc(l.description || '-')}</td>
+                <td>${l.status === 1 ? '<span class="badge badge-green"><span class="badge-dot"></span>可用</span>' : '<span class="badge badge-gray"><span class="badge-dot"></span>停用</span>'}</td>
+                <td>
+                    <button class="btn btn-ghost btn-sm" onclick='openLab(${JSON.stringify(l)})'>编辑</button>
+                    ${IS_ADMIN ? `<button class="btn btn-danger btn-sm" onclick="delLab(${l.id})">删除</button>` : ''}
+                </td>
+            </tr>`).join('');
+    }
+
+    async function openLab(l) {
+        await loadLabTypesForSelect();
+        document.getElementById('lmTitle').innerText = l ? '编辑实验室' : '新增实验室';
+        document.getElementById('lmId').value = l ? l.id : '';
+        document.getElementById('lmName').value = l ? l.name : '';
+        document.getElementById('lmType').value = l ? (l.typeId || '') : '';
+        document.getElementById('lmLocation').value = l ? (l.location || '') : '';
+        document.getElementById('lmCapacity').value = l ? (l.capacity || 0) : '';
+        document.getElementById('lmManager').value = l ? (l.manager || '') : '';
+        document.getElementById('lmImage').value = l ? (l.imageUrl || '') : '';
+        document.getElementById('lmDesc').value = l ? (l.description || '') : '';
+        openModal('labModal');
+    }
+
+    async function loadLabTypesForSelect() {
+        const types = await Api.getLabTypes();
+        const sel = document.getElementById('lmType');
+        sel.innerHTML = '<option value="">未分类</option>' + types.map(t => `<option value="${t.id}">${esc(t.typeName)}</option>`).join('');
+    }
+
+    async function saveLab() {
+        const payload = {
+            id: document.getElementById('lmId').value || null,
+            name: document.getElementById('lmName').value.trim(),
+            typeId: document.getElementById('lmType').value ? Number(document.getElementById('lmType').value) : null,
+            location: document.getElementById('lmLocation').value.trim(),
+            capacity: Number(document.getElementById('lmCapacity').value) || 0,
+            manager: document.getElementById('lmManager').value.trim(),
+            imageUrl: document.getElementById('lmImage').value.trim(),
+            description: document.getElementById('lmDesc').value.trim(),
+            status: 1
+        };
+        if (!payload.name) { toast('请填写实验室名称', 'error'); return; }
+        try {
+            await Api.saveLab(payload);
+            toast('实验室已保存');
+            closeModal('labModal');
+            loadLabManage();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delLab(id) {
+        if (!await confirmDialog('确认删除该实验室？', '删除实验室')) return;
+        try { await Api.deleteLab(id); toast('已删除'); loadLabManage(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 实验室预约审核 ----------
+    async function loadLabAudit() {
+        const status = document.getElementById('labAuditStatus').value;
+        const list = await Api.getLabReservations(status);
+        const tbody = document.getElementById('labAuditList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无预约记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td><td>${esc(r.labName)}</td><td>${esc(r.reserveDate)}</td>
+                <td>${esc(r.timeSlot)}</td><td>${esc(r.purpose || '-')}</td>
+                <td>${reserveBadge(r.status)}</td>
+                <td>${r.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditLab(${r.id},1)">通过</button> <button class="btn btn-danger btn-sm" onclick="auditLab(${r.id},2)">拒绝</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    async function auditLab(id, status) {
+        try { await Api.auditLabReservation(id, status); toast(status === 1 ? '已通过' : '已拒绝'); loadLabAudit(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 设备预约审核 ----------
+    async function loadDevReserveAudit() {
+        const status = document.getElementById('devReserveAuditStatus').value;
+        const list = await Api.getDeviceReservations(status);
+        const tbody = document.getElementById('devReserveAuditList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无预约记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td><td class="mono">${esc(r.deviceNo)}</td><td>${esc(r.deviceName)}</td>
+                <td>${esc(r.reserveDate)}</td><td>${esc(r.timeSlot)}</td>
+                <td>${reserveBadge(r.status)}</td>
+                <td>${r.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditDevReserve(${r.id},1)">通过</button> <button class="btn btn-danger btn-sm" onclick="auditDevReserve(${r.id},2)">拒绝</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    async function auditDevReserve(id, status) {
+        try { await Api.auditDeviceReservation(id, status); toast(status === 1 ? '已通过' : '已拒绝'); loadDevReserveAudit(); } catch (e) { handleApiError(e); }
+    }
+
+    function reserveBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-green', 2: 'badge-red', 3: 'badge-gray' };
+        const text = { 0: '待审核', 1: '已通过', 2: '已拒绝', 3: '已取消' }[s] || '-';
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${text}</span>`;
+    }
+
+    // ---------- 采购管理 ----------
+    async function loadPurchaseManage() {
+        const status = document.getElementById('purchaseStatus').value;
+        const list = await Api.getPurchases(status);
+        const tbody = document.getElementById('purchaseManageList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty">暂无采购申请</td></tr>'; return; }
+        tbody.innerHTML = list.map(p => `
+            <tr>
+                <td>${esc(p.deviceName)}</td><td>${esc(p.model || '-')}</td><td>${p.quantity || 0}</td>
+                <td>${p.unitPrice != null ? p.unitPrice : '-'}</td><td>${esc(p.supplier || '-')}</td>
+                <td>${esc(p.applicantName || '-')}</td>
+                <td>${purchaseBadge(p.status)}</td>
+                <td>${p.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditPurchase(${p.id},1)">批准</button> <button class="btn btn-danger btn-sm" onclick="auditPurchase(${p.id},2)">拒绝</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    async function auditPurchase(id, status) {
+        try { await Api.auditPurchase(id, status); toast(status === 1 ? '已批准' : '已拒绝'); loadPurchaseManage(); } catch (e) { handleApiError(e); }
+    }
+
+    function purchaseBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-green', 2: 'badge-red', 3: 'badge-blue' };
+        const text = { 0: '待审批', 1: '已批准', 2: '已拒绝', 3: '已采购' }[s] || '-';
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${text}</span>`;
+    }
+
+    // ---------- 耗材管理 ----------
+    async function loadConsumables() {
+        const keyword = document.getElementById('csKeyword').value.trim();
+        const list = await Api.getConsumables(keyword);
+        const tbody = document.getElementById('consumableList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无耗材</td></tr>'; return; }
+        tbody.innerHTML = list.map(c => `
+            <tr>
+                <td>${esc(c.name)}</td><td>${esc(c.spec || '-')}</td><td>${esc(c.unit || '-')}</td>
+                <td>${c.quantity || 0}</td><td>${esc(c.category || '-')}</td>
+                <td>${c.status === 1 ? '<span class="badge badge-green"><span class="badge-dot"></span>正常</span>' : '<span class="badge badge-gray"><span class="badge-dot"></span>停用</span>'}</td>
+                <td>
+                    <button class="btn btn-ghost btn-sm" onclick='openConsumable(${JSON.stringify(c)})'>编辑</button>
+                    <button class="btn btn-danger btn-sm" onclick="delConsumable(${c.id})">删除</button>
+                </td>
+            </tr>`).join('');
+    }
+
+    function openConsumable(c) {
+        document.getElementById('csmTitle').innerText = c ? '编辑耗材' : '新增耗材';
+        document.getElementById('csmId').value = c ? c.id : '';
+        document.getElementById('csmName').value = c ? c.name : '';
+        document.getElementById('csmSpec').value = c ? (c.spec || '') : '';
+        document.getElementById('csmUnit').value = c ? (c.unit || '') : '';
+        document.getElementById('csmQuantity').value = c ? (c.quantity || 0) : '';
+        document.getElementById('csmCategory').value = c ? (c.category || '') : '';
+        openModal('consumableModal');
+    }
+
+    async function saveConsumable() {
+        const payload = {
+            id: document.getElementById('csmId').value || null,
+            name: document.getElementById('csmName').value.trim(),
+            spec: document.getElementById('csmSpec').value.trim(),
+            unit: document.getElementById('csmUnit').value.trim(),
+            quantity: Number(document.getElementById('csmQuantity').value) || 0,
+            category: document.getElementById('csmCategory').value.trim(),
+            status: 1
+        };
+        if (!payload.name) { toast('请填写耗材名称', 'error'); return; }
+        try {
+            await Api.saveConsumable(payload);
+            toast('耗材已保存');
+            closeModal('consumableModal');
+            loadConsumables();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delConsumable(id) {
+        if (!await confirmDialog('确认删除该耗材？', '删除耗材')) return;
+        try { await Api.deleteConsumable(id); toast('已删除'); loadConsumables(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 危化品标准库 ----------
+    async function loadChemicals() {
+        const keyword = document.getElementById('chKeyword').value.trim();
+        const list = await Api.getChemicals(keyword);
+        const tbody = document.getElementById('chemicalList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无危化品</td></tr>'; return; }
+        tbody.innerHTML = list.map(c => `
+            <tr>
+                <td class="mono">${esc(c.casNo || '-')}</td><td>${esc(c.name)}</td>
+                <td>${riskBadge(c.riskLevel)}</td><td>${esc(c.category || '-')}</td>
+                <td>${esc(c.unit || '-')}</td><td>${esc(c.description || '-')}</td>
+                <td>
+                    <button class="btn btn-ghost btn-sm" onclick='openChemical(${JSON.stringify(c)})'>编辑</button>
+                    <button class="btn btn-danger btn-sm" onclick="delChemical(${c.id})">删除</button>
+                </td>
+            </tr>`).join('');
+    }
+
+    function riskBadge(level) {
+        const map = { '低': 'badge-green', '中': 'badge-yellow', '高': 'badge-red' };
+        return `<span class="badge ${map[level] || 'badge-gray'}"><span class="badge-dot"></span>${level || '-'}</span>`;
+    }
+
+    function openChemical(c) {
+        document.getElementById('chmTitle').innerText = c ? '编辑危化品' : '新增危化品';
+        document.getElementById('chmId').value = c ? c.id : '';
+        document.getElementById('chmCas').value = c ? (c.casNo || '') : '';
+        document.getElementById('chmName').value = c ? c.name : '';
+        document.getElementById('chmRisk').value = c ? (c.riskLevel || '低') : '低';
+        document.getElementById('chmCategory').value = c ? (c.category || '') : '';
+        document.getElementById('chmUnit').value = c ? (c.unit || '') : '';
+        document.getElementById('chmDesc').value = c ? (c.description || '') : '';
+        openModal('chemicalModal');
+    }
+
+    async function saveChemical() {
+        const payload = {
+            id: document.getElementById('chmId').value || null,
+            casNo: document.getElementById('chmCas').value.trim(),
+            name: document.getElementById('chmName').value.trim(),
+            riskLevel: document.getElementById('chmRisk').value,
+            category: document.getElementById('chmCategory').value.trim(),
+            unit: document.getElementById('chmUnit').value.trim(),
+            description: document.getElementById('chmDesc').value.trim()
+        };
+        if (!payload.name) { toast('请填写危化品名称', 'error'); return; }
+        try {
+            await Api.saveChemical(payload);
+            toast('危化品已保存');
+            closeModal('chemicalModal');
+            loadChemicals();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delChemical(id) {
+        if (!await confirmDialog('确认删除该危化品？', '删除危化品')) return;
+        try { await Api.deleteChemical(id); toast('已删除'); loadChemicals(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 废弃物管理 ----------
+    async function loadWastes() {
+        const status = document.getElementById('wasteStatus').value;
+        const list = await Api.getWastes(status);
+        const tbody = document.getElementById('wasteList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无废弃物记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(w => `
+            <tr>
+                <td class="mono">${esc(w.wasteNo || '-')}</td><td>${esc(w.type)}</td><td>${esc(w.source || '-')}</td>
+                <td>${w.quantity != null ? w.quantity + ' ' + (w.unit || '') : '-'}</td>
+                <td>${esc(w.reporterName || '-')}</td>
+                <td>${wasteBadge(w.status)}</td>
+                <td>
+                    ${w.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditWaste(${w.id},1)">验收</button> <button class="btn btn-danger btn-sm" onclick="auditWaste(${w.id},3)">驳回</button>` : ''}
+                    ${w.status === 1 ? `<button class="btn btn-primary btn-sm" onclick="disposeWaste(${w.id})">处置</button>` : ''}
+                    ${w.status === 2 ? '-' : ''}
+                </td>
+            </tr>`).join('');
+    }
+
+    function wasteBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-blue', 2: 'badge-green', 3: 'badge-red' };
+        const text = { 0: '待审核', 1: '已验收', 2: '已处置', 3: '已驳回' }[s] || '-';
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${text}</span>`;
+    }
+
+    function openWaste() {
+        document.getElementById('wmType').value = '';
+        document.getElementById('wmSource').value = '';
+        document.getElementById('wmQuantity').value = '';
+        document.getElementById('wmUnit').value = '';
+        openModal('wasteModal');
+    }
+
+    async function submitWaste() {
+        const payload = {
+            type: document.getElementById('wmType').value.trim(),
+            source: document.getElementById('wmSource').value.trim(),
+            quantity: Number(document.getElementById('wmQuantity').value) || 0,
+            unit: document.getElementById('wmUnit').value.trim()
+        };
+        if (!payload.type) { toast('请填写废弃物类型', 'error'); return; }
+        try {
+            await Api.reportWaste(payload);
+            toast('废弃物已登记');
+            closeModal('wasteModal');
+            loadWastes();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function auditWaste(id, status) {
+        const remark = status === 1 ? '验收通过' : '验收驳回';
+        try { await Api.auditWaste(id, status, remark); toast(status === 1 ? '已验收' : '已驳回'); loadWastes(); } catch (e) { handleApiError(e); }
+    }
+
+    async function disposeWaste(id) {
+        if (!await confirmDialog('确认处置该废弃物？', '废弃物处置', 'info')) return;
+        try { await Api.disposeWaste(id, '已完成处置'); toast('已处置'); loadWastes(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 诚信管理 ----------
+    async function loadCreditManage() {
+        const users = await Api.getUsers();
+        document.getElementById('cmUser').innerHTML = users.map(u => `<option value="${u.id}">${esc(u.realName || u.username)}（${esc(u.username)}）</option>`).join('');
+        const logs = await Api.getCreditLogs();
+        const tbody = document.getElementById('creditLogList');
+        if (!logs.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">暂无评分记录</td></tr>'; return; }
+        tbody.innerHTML = logs.map(l => `
+            <tr>
+                <td>${esc(l.userName || '-')}</td><td>${esc(l.changeType || '-')}</td>
+                <td class="${l.scoreChange > 0 ? 'text-success' : 'text-danger'}">${l.scoreChange > 0 ? '+' : ''}${l.scoreChange}</td>
+                <td>${esc(l.reason || '-')}</td><td>${esc(formatDate(l.createTime))}</td>
+            </tr>`).join('');
+    }
+
+    async function submitCreditAdjust() {
+        const userId = document.getElementById('cmUser').value;
+        const scoreChange = Number(document.getElementById('cmScore').value);
+        const reason = document.getElementById('cmReason').value.trim();
+        if (!userId) { toast('请选择用户', 'error'); return; }
+        if (!scoreChange || scoreChange === 0) { toast('请填写分数变化', 'error'); return; }
+        if (!reason) { toast('请填写原因', 'error'); return; }
+        try {
+            await Api.adjustCredit(Number(userId), scoreChange, reason, scoreChange > 0 ? '加分' : '扣分');
+            toast('诚信分已调整');
+            document.getElementById('cmScore').value = '';
+            document.getElementById('cmReason').value = '';
+            loadCreditManage();
+        } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 实验室类型管理 ----------
+    async function loadLabType() {
+        const types = await Api.getLabTypes();
+        const tbody = document.getElementById('labTypeList');
+        if (!types.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty">暂无类型</td></tr>'; return; }
+        tbody.innerHTML = types.map(t => `
+            <tr>
+                <td>${t.id}</td><td>${esc(t.typeName)}</td><td>${esc(t.description || '-')}</td>
+                <td><button class="btn btn-danger btn-sm" onclick="delLabType(${t.id})">删除</button></td>
+            </tr>`).join('');
+    }
+
+    async function saveLabType() {
+        const typeName = document.getElementById('ltName').value.trim();
+        const description = document.getElementById('ltDesc').value.trim();
+        if (!typeName) { toast('请填写类型名称', 'error'); return; }
+        try {
+            await Api.saveLabType({ typeName, description });
+            toast('类型已添加');
+            document.getElementById('ltName').value = '';
+            document.getElementById('ltDesc').value = '';
+            loadLabType();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delLabType(id) {
+        if (!await confirmDialog('确认删除该实验室类型？', '删除类型')) return;
+        try { await Api.deleteLabType(id); toast('已删除'); loadLabType(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 反馈建议管理 ----------
+    async function loadFeedbackManage() {
+        const status = document.getElementById('fbStatus').value;
+        const list = await Api.getFeedback(status);
+        const box = document.getElementById('feedbackManageList');
+        if (!list.length) { box.innerHTML = '<div class="empty-state"><p>暂无反馈</p></div>'; return; }
+        box.innerHTML = list.map(f => `
+            <div class="notice-item">
+                <div class="n-title">${esc(f.title)} <span class="badge ${f.status === 0 ? 'badge-yellow' : 'badge-green'}"><span class="badge-dot"></span>${f.statusText}</span></div>
+                <div class="n-meta"><span>提交人：${esc(f.userName)}</span><span>类型：${esc(f.typeText)}</span><span>${esc(f.createTime)}</span></div>
+                <div class="n-content">${esc(f.content)}</div>
+                ${f.reply ? `<div class="mt-8" style="padding:10px;background:rgba(34,211,238,0.06);border-radius:8px;font-size:13px;"><span class="text-cyan">已回复：</span>${esc(f.reply)}</div>` : ''}
+                ${f.status === 0 ? `<div class="mt-8"><button class="btn btn-primary btn-sm" onclick="openReply(${f.id})">回复</button></div>` : ''}
+            </div>`).join('');
+    }
+
+    async function openReply(id) {
+        const reply = await promptDialog('回复用户反馈', '请输入回复内容...');
+        if (!reply || !reply.trim()) return;
+        try {
+            await Api.replyFeedback(id, reply.trim());
+            toast('已回复');
+            loadFeedbackManage();
+        } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 报警管理 ----------
+    async function loadAlarms() {
+        const status = document.getElementById('alStatus').value;
+        const level = document.getElementById('alLevel').value;
+        const list = await Api.getAlarms(status, level);
+        const box = document.getElementById('alarmManageList');
+        if (!list.length) { box.innerHTML = '<div class="empty-state"><p>暂无报警</p></div>'; return; }
+        box.innerHTML = list.map(a => {
+            const levelClass = a.level === 'critical' ? 'critical' : (a.level === 'info' ? 'info' : '');
+            const handled = a.status === 2 ? 'handled' : '';
+            return `
+                <div class="alarm-card ${levelClass} ${handled}">
+                    <div class="alarm-head">
+                        <div>
+                            <div class="alarm-title">${esc(a.targetName || '-')} <span class="badge ${a.level === 'critical' ? 'badge-red' : (a.level === 'warning' ? 'badge-yellow' : 'badge-blue')}"><span class="badge-dot"></span>${a.levelText || ''}</span> <span class="badge ${a.status === 0 ? 'badge-yellow' : 'badge-green'}"><span class="badge-dot"></span>${a.statusText}</span></div>
+                            <div class="alarm-meta">${esc(a.createTime)} · 指标：${esc(a.metric || '-')} · 数值：${a.value || '-'}</div>
+                        </div>
+                        ${a.status === 0 ? `<button class="btn btn-primary btn-sm" onclick="openAlarmHandle(${a.id}, '${esc(a.targetName || '')}', '${esc(a.message || '')}')">处理</button>` : ''}
+                    </div>
+                    <div class="alarm-msg">${esc(a.message || '')}</div>
+                    ${a.handleRemark ? `<div class="mt-8" style="padding:8px;background:rgba(52,211,153,0.08);border-radius:6px;font-size:12.5px;color:#94a3b8;"><span class="text-success">处理记录：</span>${esc(a.handleRemark)} <span style="float:right;">${esc(a.handleTime)}</span></div>` : ''}
+                </div>`;
+        }).join('');
+    }
+
+    function openAlarmHandle(id, name, message) {
+        document.getElementById('ahId').value = id;
+        document.getElementById('ahInfo').innerHTML = `<b>报警对象：</b>${esc(name)}<br><b>报警内容：</b>${esc(message)}`;
+        document.getElementById('ahRemark').value = '';
+        openModal('alarmHandleModal');
+    }
+
+    async function submitAlarmHandle(status) {
+        const id = document.getElementById('ahId').value;
+        const remark = document.getElementById('ahRemark').value.trim();
+        if (!remark) { toast('请填写处理结果', 'error'); return; }
+        try {
+            await Api.handleAlarm(Number(id), status, remark);
+            toast('已处理');
+            closeModal('alarmHandleModal');
+            loadAlarms();
+        } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 仪器管理 ----------
+    async function loadInstruments() {
+        const keyword = document.getElementById('insKeyword').value.trim();
+        const status = document.getElementById('insStatus').value;
+        const list = await Api.getInstruments(keyword, status);
+        const tbody = document.getElementById('instrumentList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty">暂无仪器</td></tr>'; return; }
+        const statusMap = { 1: 'badge-green', 2: 'badge-yellow', 3: 'badge-gray', 4: 'badge-red' };
+        const statusText = { 1: '正常', 2: '检定中', 3: '停用', 4: '报废' };
+        tbody.innerHTML = list.map(i => `
+            <tr>
+                <td class="mono">${esc(i.instrumentNo)}</td>
+                <td>${esc(i.name)}</td>
+                <td>${esc(i.brand || '-')}</td>
+                <td>${esc(i.model || '-')}</td>
+                <td>${esc(i.accuracy || '-')}</td>
+                <td>${esc(i.location || '-')}</td>
+                <td>${i.nextCheckDate || '-'}</td>
+                <td><span class="badge ${statusMap[i.status] || 'badge-gray'}"><span class="badge-dot"></span>${statusText[i.status] || '-'}</span></td>
+                <td>
+                    <button class="btn btn-ghost btn-sm" onclick='openInstrument(${JSON.stringify(i)})'>编辑</button>
+                    <button class="btn btn-danger btn-sm" onclick="delInstrument(${i.id})">删除</button>
+                </td>
+            </tr>`).join('');
+    }
+
+    function openInstrument(i) {
+        document.getElementById('imTitle').innerText = i ? '编辑仪器' : '新增仪器';
+        document.getElementById('imId').value = i ? i.id : '';
+        document.getElementById('imNo').value = i ? i.instrumentNo : '';
+        document.getElementById('imName').value = i ? i.name : '';
+        document.getElementById('imBrand').value = i ? (i.brand || '') : '';
+        document.getElementById('imModel').value = i ? (i.model || '') : '';
+        document.getElementById('imAccuracy').value = i ? (i.accuracy || '') : '';
+        document.getElementById('imSerial').value = i ? (i.serialNo || '') : '';
+        document.getElementById('imLocation').value = i ? (i.location || '') : '';
+        document.getElementById('imLastCheck').value = i && i.lastCheckDate ? String(i.lastCheckDate).slice(0, 10) : '';
+        document.getElementById('imNextCheck').value = i && i.nextCheckDate ? String(i.nextCheckDate).slice(0, 10) : '';
+        document.getElementById('imStatus').value = i ? i.status : 1;
+        document.getElementById('imDesc').value = i ? (i.description || '') : '';
+        openModal('instrumentModal');
+    }
+
+    async function saveInstrument() {
+        const payload = {
+            id: document.getElementById('imId').value || null,
+            instrumentNo: document.getElementById('imNo').value.trim(),
+            name: document.getElementById('imName').value.trim(),
+            brand: document.getElementById('imBrand').value.trim(),
+            model: document.getElementById('imModel').value.trim(),
+            accuracy: document.getElementById('imAccuracy').value.trim(),
+            serialNo: document.getElementById('imSerial').value.trim(),
+            location: document.getElementById('imLocation').value.trim(),
+            lastCheckDate: document.getElementById('imLastCheck').value || null,
+            nextCheckDate: document.getElementById('imNextCheck').value || null,
+            status: Number(document.getElementById('imStatus').value),
+            description: document.getElementById('imDesc').value.trim()
+        };
+        if (!payload.instrumentNo || !payload.name) { toast('请填写仪器编号和名称', 'error'); return; }
+        try {
+            await Api.saveInstrument(payload);
+            toast('仪器已保存');
+            closeModal('instrumentModal');
+            loadInstruments();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function delInstrument(id) {
+        if (!await confirmDialog('确认删除该仪器？', '删除仪器')) return;
+        try { await Api.deleteInstrument(id); toast('已删除'); loadInstruments(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 知识库 ----------
+    async function loadKnowledge() {
+        const category = document.getElementById('knCategory').value;
+        const list = await Api.getKnowledge(category);
+        const box = document.getElementById('knowledgeList');
+        if (!list.length) { box.innerHTML = '<div class="empty-state"><p>暂无知识</p></div>'; return; }
+        box.innerHTML = list.map(k => `
+            <div class="notice-item">
+                <div class="n-title">${esc(k.title)} <span class="badge badge-purple"><span class="badge-dot"></span>${esc(k.category || '未分类')}</span> <span class="badge badge-gray"><span class="badge-dot"></span>${k.viewCount || 0} 浏览</span></div>
+                <div class="n-meta"><span>${esc(formatDate(k.createTime))}</span></div>
+                <div class="n-content">${esc((k.content || '').slice(0, 200))}${(k.content || '').length > 200 ? '...' : ''}</div>
+            </div>`).join('');
+    }
+
+    function openKnowledge() {
+        document.getElementById('knCategoryEdit').value = '操作规范';
+        document.getElementById('knTitle').value = '';
+        document.getElementById('knContent').value = '';
+        openModal('knowledgeModal');
+    }
+
+    async function saveKnowledge() {
+        const title = document.getElementById('knTitle').value.trim();
+        const content = document.getElementById('knContent').value.trim();
+        const category = document.getElementById('knCategoryEdit').value;
+        if (!title) { toast('请填写标题', 'error'); return; }
+        if (!content) { toast('请填写内容', 'error'); return; }
+        try {
+            await Api.saveKnowledge({ title, content, category, viewCount: 0, authorId: getLoginUser() ? getLoginUser().userId : 1 });
+            toast('已发布');
+            closeModal('knowledgeModal');
+            loadKnowledge();
+        } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 操作日志 ----------
+    async function loadLogs() {
+        const module = document.getElementById('logModule').value;
+        const keyword = document.getElementById('logKeyword').value.trim();
+        const list = await Api.getOperationLogs(module, keyword, 100);
+        const tbody = document.getElementById('logList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">暂无操作日志</td></tr>'; return; }
+        tbody.innerHTML = list.map(l => `
+            <tr>
+                <td>${esc(l.username || '-')}</td>
+                <td>${esc(l.module || '-')}</td>
+                <td>${esc(l.action || '-')}</td>
+                <td>${esc(l.detail || '-')}</td>
+                <td>${esc(l.createTime || '-')}</td>
+            </tr>`).join('');
+    }
+
+    // ---------- 报废审核 ----------
+    async function loadScrapAudit() {
+        const status = document.getElementById('scrapAuditStatus').value;
+        const list = await Api.getScraps(status);
+        const tbody = document.getElementById('scrapAuditList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">暂无报废申请</td></tr>'; return; }
+        const scrapBadge = s => {
+            const map = { 0: 'badge-yellow', 1: 'badge-green', 2: 'badge-red' };
+            const text = { 0: '待审核', 1: '已通过', 2: '已拒绝' }[s] || '-';
+            return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${text}</span>`;
+        };
+        tbody.innerHTML = list.map(s => `
+            <tr>
+                <td>${esc(s.userName)}</td>
+                <td class="mono">${esc(s.deviceNo)}</td>
+                <td>${esc(s.deviceName)}</td>
+                <td>${esc(s.reason)}</td>
+                <td>${scrapBadge(s.status)}</td>
+                <td>${s.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditScrap(${s.id},1)">通过</button> <button class="btn btn-danger btn-sm" onclick="auditScrap(${s.id},2)">拒绝</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    async function auditScrap(id, status) {
+        if (!await confirmDialog(status === 1 ? '确认通过该报废申请？通过后设备将标记为报废。' : '确认拒绝该报废申请？', '报废审核', 'info')) return;
+        try {
+            await Api.auditScrap(id, status, status === 1 ? '同意报废' : '拒绝报废');
+            toast(status === 1 ? '已通过' : '已拒绝');
+            loadScrapAudit();
+        } catch (e) { handleApiError(e); }
+    }
+
+    document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => switchPage(n.dataset.page)));
+    document.querySelectorAll('.modal-mask').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+    window.addEventListener('resize', () => { [deviceChart, recordChart, applyChart, repairChart].forEach(c => c && c.resize()); });
+
+    (async function init() {
+        initUser();
+        startTokenExpiryCheck();
+        if (IS_ADMIN) await loadRoles();
+        const gotoPage = sessionStorage.getItem('gotoPage');
+        if (gotoPage) {
+            sessionStorage.removeItem('gotoPage');
+            switchPage(gotoPage);
+        } else {
+            switchPage('overview');
+        }
+    })();
+</script>
+</body>
+</html>

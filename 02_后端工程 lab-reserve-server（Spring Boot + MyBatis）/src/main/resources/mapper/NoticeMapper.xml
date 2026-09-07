@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.NoticeMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.Notice">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="publish_user_id" property="publishUserId"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="status" property="status"/>
+        <result column="publisher_name" property="publisherName"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT n.*, u.real_name AS publisher_name
+        FROM notice n
+        LEFT JOIN `user` u ON n.publish_user_id = u.id
+        WHERE n.status = 1
+        ORDER BY n.publish_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT n.*, u.real_name AS publisher_name
+        FROM notice n
+        LEFT JOIN `user` u ON n.publish_user_id = u.id
+        WHERE n.id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.lab.reserve.entity.Notice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO notice(title, content, publish_user_id, publish_time, status)
+        VALUES(#{title}, #{content}, #{publishUserId}, #{publishTime}, #{status})
+    </insert>
+
+    <update id="updateById" parameterType="com.lab.reserve.entity.Notice">
+        UPDATE notice
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM notice WHERE id = #{id}
+    </delete>
+</mapper>

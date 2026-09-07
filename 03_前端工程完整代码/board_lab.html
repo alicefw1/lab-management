@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实验员端 - 实验室设备管理系统</title>
+    <link href="assets/app.css" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="logo">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="name">实验设备管理<small>Lab Equipment System</small></div>
+        </div>
+        <nav class="nav">
+            <div class="nav-group">
+                <div class="nav-label">实验员工作台</div>
+                <div class="nav-item active" data-page="overview">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+                    工作台
+                </div>
+                <div class="nav-item" data-page="approve">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    借用审批
+                </div>
+                <div class="nav-item" data-page="records">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+                    借还登记
+                </div>
+                <div class="nav-item" data-page="overdue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    逾期管理
+                </div>
+                <div class="nav-item" data-page="devices">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    设备管理
+                </div>
+                <div class="nav-item" data-page="repairs">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    报修工单
+                </div>
+                <div class="nav-item" data-page="notices">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    公告管理
+                </div>
+                <div class="nav-item" data-page="lab-audit">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    实验室预约审核
+                </div>
+                <div class="nav-item" data-page="dev-reserve-audit">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    设备预约审核
+                </div>
+                <div class="nav-item" data-page="purchase-manage">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    采购管理
+                </div>
+            </div>
+        </nav>
+        <div class="user-card">
+            <div class="avatar" id="avatar">L</div>
+            <div class="uinfo">
+                <div class="uname" id="uName">-</div>
+                <div class="urole" id="uRole">实验员</div>
+            </div>
+            <div class="logout" onclick="logout()" title="退出登录">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div>
+                <h1 id="pageTitle">工作台</h1>
+                <div class="sub" id="pageSub">实验室设备运行状态总览</div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">菜单</button>
+            </div>
+        </div>
+
+        <section class="page active" id="page-overview">
+            <div class="stat-grid" id="ovStats"></div>
+            <div class="panel mt-16">
+                <div class="panel-head"><div class="panel-title">最近借用申请待批</div></div>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead><tr><th>申请人</th><th>设备名称</th><th>申请时间</th><th>预计归还</th><th>操作</th></tr></thead>
+                        <tbody id="ovApplyList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="page" id="page-approve">
+            <div class="toolbar">
+                <select id="apStatus" class="select">
+                    <option value="0">待审批</option>
+                    <option value="">全部</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadApplies()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>申请人</th><th>设备编号</th><th>设备名称</th><th>申请理由</th><th>预计归还</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="applyList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="page" id="page-records">
+            <div class="toolbar">
+                <select id="rcStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="1">借用中</option>
+                    <option value="2">已归还</option>
+                    <option value="3">逾期</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadRecords()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>借用人</th><th>设备编号</th><th>设备名称</th><th>借用时间</th><th>归还时间</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="recordList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="page" id="page-overdue">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="doRefreshOverdue()">刷新逾期状态</button>
+                <button class="btn btn-ghost" onclick="loadOverdue()">刷新列表</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>借用人</th><th>设备编号</th><th>设备名称</th><th>借用时间</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="overdueList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="page" id="page-devices">
+            <div class="toolbar">
+                <input id="devKeyword" class="input grow" placeholder="搜索设备名称 / 编号">
+                <select id="devStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="1">可借</option>
+                    <option value="2">已借出</option>
+                    <option value="3">维修中</option>
+                    <option value="4">报废</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadDevices()">查询</button>
+                <button class="btn btn-ghost" onclick="openCategory()">分类管理</button>
+                <button class="btn btn-success" onclick="openDevice()">新增设备</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>编号</th><th>名称</th><th>分类</th><th>型号</th><th>位置</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="devList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="page" id="page-repairs">
+            <div class="toolbar">
+                <select id="rpStatus" class="select">
+                    <option value="">全部状态</option>
+                    <option value="0">待处理</option>
+                    <option value="1">维修中</option>
+                    <option value="2">已完成</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadRepairs()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>报修人</th><th>设备编号</th><th>设备名称</th><th>故障描述</th><th>报修时间</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="repairList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="page" id="page-notices">
+            <div class="toolbar">
+                <button class="btn btn-success" onclick="openNotice()">发布公告</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>标题</th><th>发布人</th><th>发布时间</th><th>操作</th></tr></thead>
+                    <tbody id="noticeList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 实验室预约审核 -->
+        <section class="page" id="page-lab-audit">
+            <div class="toolbar">
+                <select id="labAuditStatus" class="select">
+                    <option value="0">待审核</option>
+                    <option value="">全部</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadLabAudit()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>申请人</th><th>实验室</th><th>预约日期</th><th>时间段</th><th>用途</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="labAuditList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 设备预约审核 -->
+        <section class="page" id="page-dev-reserve-audit">
+            <div class="toolbar">
+                <select id="devReserveAuditStatus" class="select">
+                    <option value="0">待审核</option>
+                    <option value="">全部</option>
+                    <option value="1">已通过</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadDevReserveAudit()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>申请人</th><th>设备编号</th><th>设备名称</th><th>预约日期</th><th>时间段</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="devReserveAuditList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 采购管理 -->
+        <section class="page" id="page-purchase-manage">
+            <div class="toolbar">
+                <select id="purchaseStatus" class="select">
+                    <option value="0">待审批</option>
+                    <option value="">全部</option>
+                    <option value="1">已批准</option>
+                    <option value="2">已拒绝</option>
+                </select>
+                <button class="btn btn-primary" onclick="loadPurchaseManage()">查询</button>
+            </div>
+            <div class="table-wrap panel">
+                <table class="table">
+                    <thead><tr><th>设备名称</th><th>型号</th><th>数量</th><th>单价</th><th>供应商</th><th>申请人</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="purchaseManageList"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- 设备编辑模态框 -->
+<div class="modal-mask" id="deviceModal">
+    <div class="modal">
+        <div class="modal-head"><h3 id="dmTitle">新增设备</h3><span class="modal-close" onclick="closeModal('deviceModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="dmId">
+            <div class="field"><label>设备编号</label><input id="dmNo" class="input" placeholder="如 DSO-100"></div>
+            <div class="field"><label>设备名称</label><input id="dmName" class="input" placeholder="设备名称"></div>
+            <div class="field"><label>设备分类</label><select id="dmCategory" class="select"></select></div>
+            <div class="field"><label>型号</label><input id="dmModel" class="input" placeholder="规格型号"></div>
+            <div class="field"><label>存放位置</label><input id="dmLocation" class="input" placeholder="如 A-101"></div>
+            <div class="field"><label>采购日期</label><input id="dmPurchase" type="date" class="input"></div>
+            <div class="field"><label>状态</label><select id="dmStatus" class="select">
+                <option value="1">可借</option><option value="2">已借出</option><option value="3">维修中</option><option value="4">报废</option>
+            </select></div>
+            <div class="field"><label>备注</label><input id="dmRemark" class="input" placeholder="备注信息"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('deviceModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveDevice()">保存</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-mask" id="categoryModal">
+    <div class="modal">
+        <div class="modal-head"><h3>设备分类管理</h3><span class="modal-close" onclick="closeModal('categoryModal')">&times;</span></div>
+        <div class="modal-body">
+            <div class="field"><label>分类名称</label><input id="cgName" class="input" placeholder="分类名称"></div>
+            <div class="field"><label>分类描述</label><input id="cgDesc" class="input" placeholder="分类描述"></div>
+            <button class="btn btn-primary btn-sm" onclick="saveCategory()">添加分类</button>
+            <div class="mt-16">
+                <table class="table"><thead><tr><th>ID</th><th>名称</th><th>描述</th></tr></thead><tbody id="cgList"></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-mask" id="approveModal">
+    <div class="modal">
+        <div class="modal-head"><h3>审批借用申请</h3><span class="modal-close" onclick="closeModal('approveModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="apId">
+            <div id="apInfo" class="text-muted" style="font-size:13px; line-height:1.9;"></div>
+            <div class="field mt-16"><label>审批意见</label><textarea id="apRemark" class="textarea" placeholder="审批意见（拒绝时建议填写原因）"></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-danger" onclick="doApprove(2)">拒绝</button>
+            <button class="btn btn-success" onclick="doApprove(1)">通过</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-mask" id="returnModal">
+    <div class="modal">
+        <div class="modal-head"><h3>确认归还</h3><span class="modal-close" onclick="closeModal('returnModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="rtId">
+            <div class="field"><label>归还备注</label><input id="rtRemark" class="input" placeholder="归还备注（可选）"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('returnModal')">取消</button>
+            <button class="btn btn-primary" onclick="doReturn()">确认归还</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-mask" id="repairModal">
+    <div class="modal">
+        <div class="modal-head"><h3>处理报修工单</h3><span class="modal-close" onclick="closeModal('repairModal')">&times;</span></div>
+        <div class="modal-body">
+            <input type="hidden" id="rpId">
+            <div id="rpInfo" class="text-muted" style="font-size:13px; line-height:1.9;"></div>
+            <div class="field mt-16"><label>处理结果</label><textarea id="rpResult" class="textarea" placeholder="填写处理结果"></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="doHandleRepair(1)">标记维修中</button>
+            <button class="btn btn-primary" onclick="doHandleRepair(2)">完成维修</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-mask" id="noticeModal">
+    <div class="modal">
+        <div class="modal-head"><h3>发布公告</h3><span class="modal-close" onclick="closeModal('noticeModal')">&times;</span></div>
+        <div class="modal-body">
+            <div class="field"><label>公告标题</label><input id="ntTitle" class="input" placeholder="公告标题"></div>
+            <div class="field"><label>公告内容</label><textarea id="ntContent" class="textarea" style="min-height:140px;" placeholder="公告内容"></textarea></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal('noticeModal')">取消</button>
+            <button class="btn btn-primary" onclick="saveNotice()">发布</button>
+        </div>
+    </div>
+</div>
+
+<script src="assets/api.js"></script>
+<script>
+    const USER = requireLogin(['LAB_ADMIN']) ? getLoginUser() : null;
+
+    const pageTitles = {
+        overview: ['工作台', '实验室设备运行状态总览'],
+        approve: ['借用审批', '审批学生的设备借用申请'],
+        records: ['借还登记', '设备借用与归还流转记录'],
+        overdue: ['逾期管理', '管理逾期未归还的借用记录'],
+        devices: ['设备管理', '设备台账与分类维护'],
+        repairs: ['报修工单', '处理设备报修工单'],
+        notices: ['公告管理', '发布与维护系统公告'],
+        'lab-audit': ['实验室预约审核', '审核实验室预约申请'],
+        'dev-reserve-audit': ['设备预约审核', '审核设备预约申请'],
+        'purchase-manage': ['采购管理', '审核设备采购申请']
+    };
+
+    function switchPage(page) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+        document.getElementById('pageTitle').innerText = pageTitles[page][0];
+        document.getElementById('pageSub').innerText = pageTitles[page][1];
+        document.getElementById('sidebar').classList.remove('open');
+        const loaders = {
+            overview: loadOverview, approve: loadApplies, records: loadRecords,
+            overdue: loadOverdue, devices: loadDevices, repairs: loadRepairs, notices: loadNotices,
+            'lab-audit': loadLabAudit, 'dev-reserve-audit': loadDevReserveAudit,
+            'purchase-manage': loadPurchaseManage
+        };
+        if (loaders[page]) Promise.resolve(loaders[page]()).catch(e => handleApiError(e));
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function initUser() {
+        if (!USER) return;
+        document.getElementById('uName').innerText = USER.realName || USER.username;
+        document.getElementById('uRole').innerText = roleCodeToName(USER.roleCode);
+        document.getElementById('avatar').innerText = (USER.realName || USER.username || 'L').charAt(0).toUpperCase();
+    }
+
+    function statusBadge(s) {
+        const map = { 1: 'badge-green', 2: 'badge-blue', 3: 'badge-yellow', 4: 'badge-red', 0: 'badge-gray' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusDevice(s)}</span>`;
+    }
+    function applyBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-green', 2: 'badge-red' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusApply(s)}</span>`;
+    }
+    function recordBadge(s) {
+        const map = { 1: 'badge-blue', 2: 'badge-green', 3: 'badge-red' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusRecord(s)}</span>`;
+    }
+    function repairBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-blue', 2: 'badge-green' };
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${statusRepair(s)}</span>`;
+    }
+
+    async function loadOverview() {
+        const s = await Api.getStats();
+        const stats = [
+            { label: '待审批借用', value: s.pendingApplies, cls: 'stat-accent-3' },
+            { label: '待处理报修', value: s.pendingRepairs, cls: 'stat-accent-4' },
+            { label: '借用中设备', value: s.borrowingRecords, cls: 'stat-accent-2' },
+            { label: '设备总数', value: s.deviceTotal, cls: 'stat-accent-1' }
+        ];
+        document.getElementById('ovStats').innerHTML = stats.map(st =>
+            `<div class="stat-card ${st.cls}"><div class="stat-label">${st.label}</div><div class="stat-value">${st.value}</div></div>`).join('');
+        const applies = (await Api.getApplies(0)).slice(0, 5);
+        const tbody = document.getElementById('ovApplyList');
+        if (!applies.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">暂无待审批申请</td></tr>'; return; }
+        tbody.innerHTML = applies.map(a => `
+            <tr>
+                <td>${esc(a.userName)}</td>
+                <td>${esc(a.deviceName)}</td>
+                <td>${esc(a.applyTime)}</td>
+                <td>${esc(a.expectedReturnTime)}</td>
+                <td><button class="btn btn-primary btn-sm" onclick='openApprove(${JSON.stringify(a)})'>审批</button></td>
+            </tr>`).join('');
+    }
+
+    async function loadApplies() {
+        const status = document.getElementById('apStatus').value;
+        const list = await Api.getApplies(status);
+        const tbody = document.getElementById('applyList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无申请记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(a => `
+            <tr>
+                <td>${esc(a.userName)}</td>
+                <td class="mono">${esc(a.deviceNo)}</td>
+                <td>${esc(a.deviceName)}</td>
+                <td>${esc(a.applyReason)}</td>
+                <td>${esc(a.expectedReturnTime)}</td>
+                <td>${applyBadge(a.status)}</td>
+                <td>${a.status === 0 ? `<button class="btn btn-primary btn-sm" onclick='openApprove(${JSON.stringify(a)})'>审批</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    function openApprove(a) {
+        document.getElementById('apId').value = a.id;
+        document.getElementById('apInfo').innerHTML =
+            `<b>申请人：</b>${esc(a.userName)}<br>` +
+            `<b>设备：</b>${esc(a.deviceName)}（${esc(a.deviceNo)}）<br>` +
+            `<b>申请理由：</b>${esc(a.applyReason)}<br>` +
+            `<b>预计归还：</b>${esc(a.expectedReturnTime)}`;
+        document.getElementById('apRemark').value = '';
+        openModal('approveModal');
+    }
+
+    async function doApprove(approved) {
+        const id = document.getElementById('apId').value;
+        const remark = document.getElementById('apRemark').value.trim();
+        try {
+            await Api.approveBorrow(Number(id), approved, remark || (approved ? '同意借用' : '拒绝借用'));
+            toast(approved ? '已通过申请' : '已拒绝申请');
+            closeModal('approveModal');
+            loadApplies();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadRecords() {
+        const status = document.getElementById('rcStatus').value;
+        const list = await Api.getRecords(status);
+        const tbody = document.getElementById('recordList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无借用记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td>
+                <td class="mono">${esc(r.deviceNo)}</td>
+                <td>${esc(r.deviceName)}</td>
+                <td>${esc(r.borrowTime)}</td>
+                <td>${esc(r.returnTime)}</td>
+                <td>${recordBadge(r.status)}</td>
+                <td>${(r.status === 1 || r.status === 3) ? `<button class="btn btn-primary btn-sm" onclick="openReturn(${r.id})">归还</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    function openReturn(id) {
+        document.getElementById('rtId').value = id;
+        document.getElementById('rtRemark').value = '';
+        openModal('returnModal');
+    }
+
+    async function doReturn() {
+        const id = document.getElementById('rtId').value;
+        const remark = document.getElementById('rtRemark').value.trim();
+        try {
+            await Api.returnDevice(Number(id), remark);
+            toast('设备已归还');
+            closeModal('returnModal');
+            loadRecords();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadOverdue() {
+        const list = await Api.getOverdueRecords();
+        const tbody = document.getElementById('overdueList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">暂无逾期记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td>
+                <td class="mono">${esc(r.deviceNo)}</td>
+                <td>${esc(r.deviceName)}</td>
+                <td>${esc(r.borrowTime)}</td>
+                <td>${recordBadge(r.status)}</td>
+                <td><button class="btn btn-primary btn-sm" onclick="openReturn(${r.id})">归还</button></td>
+            </tr>`).join('');
+    }
+
+    async function doRefreshOverdue() {
+        try {
+            const r = await Api.refreshOverdue();
+            toast('已刷新逾期状态，更新 ' + (r.updated || 0) + ' 条');
+            loadOverdue();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadDevices() {
+        const keyword = document.getElementById('devKeyword').value.trim();
+        const status = document.getElementById('devStatus').value;
+        const devices = await Api.getDevices(keyword, status);
+        const tbody = document.getElementById('devList');
+        if (!devices.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无设备数据</td></tr>'; return; }
+        tbody.innerHTML = devices.map(d => `
+            <tr>
+                <td class="mono">${esc(d.deviceNo)}</td>
+                <td>${esc(d.name)}</td>
+                <td>${esc(d.categoryName || '-')}</td>
+                <td>${esc(d.model || '-')}</td>
+                <td>${esc(d.location || '-')}</td>
+                <td>${statusBadge(d.status)}</td>
+                <td><button class="btn btn-ghost btn-sm" onclick='openDevice(${JSON.stringify(d)})'>编辑</button></td>
+            </tr>`).join('');
+    }
+
+    async function loadCategories() {
+        const cats = await Api.getCategories();
+        const sel = document.getElementById('dmCategory');
+        sel.innerHTML = cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+        const cgList = document.getElementById('cgList');
+        cgList.innerHTML = cats.map(c =>
+            `<tr><td>${c.id}</td><td>${esc(c.name)}</td><td>${esc(c.description || '-')}</td></tr>`).join('');
+    }
+
+    function openDevice(d) {
+        document.getElementById('dmTitle').innerText = d ? '编辑设备' : '新增设备';
+        document.getElementById('dmId').value = d ? d.id : '';
+        document.getElementById('dmNo').value = d ? d.deviceNo : '';
+        document.getElementById('dmName').value = d ? d.name : '';
+        document.getElementById('dmModel').value = d ? (d.model || '') : '';
+        document.getElementById('dmLocation').value = d ? (d.location || '') : '';
+        document.getElementById('dmPurchase').value = d && d.purchaseDate ? String(d.purchaseDate).slice(0, 10) : '';
+        document.getElementById('dmStatus').value = d ? d.status : 1;
+        document.getElementById('dmRemark').value = d ? (d.description || '') : '';
+        loadCategories().then(() => { if (d) document.getElementById('dmCategory').value = d.categoryId; });
+        openModal('deviceModal');
+    }
+
+    async function saveDevice() {
+        const payload = {
+            id: document.getElementById('dmId').value || null,
+            deviceNo: document.getElementById('dmNo').value.trim(),
+            deviceName: document.getElementById('dmName').value.trim(),
+            categoryId: Number(document.getElementById('dmCategory').value),
+            model: document.getElementById('dmModel').value.trim(),
+            location: document.getElementById('dmLocation').value.trim(),
+            status: Number(document.getElementById('dmStatus').value),
+            purchaseDate: document.getElementById('dmPurchase').value || null,
+            description: document.getElementById('dmRemark').value.trim()
+        };
+        if (!payload.deviceNo || !payload.deviceName) { toast('请填写设备编号和名称', 'error'); return; }
+        try {
+            await Api.saveDevice(payload, payload.id);
+            toast('设备已保存');
+            closeModal('deviceModal');
+            loadDevices();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function openCategory() {
+        await loadCategories();
+        document.getElementById('cgName').value = '';
+        document.getElementById('cgDesc').value = '';
+        openModal('categoryModal');
+    }
+
+    async function saveCategory() {
+        const name = document.getElementById('cgName').value.trim();
+        if (!name) { toast('请填写分类名称', 'error'); return; }
+        try {
+            await Api.saveCategory({ name, description: document.getElementById('cgDesc').value.trim() });
+            toast('分类已添加');
+            loadCategories();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadRepairs() {
+        const status = document.getElementById('rpStatus').value;
+        const list = await Api.getRepairs(status);
+        const tbody = document.getElementById('repairList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无报修工单</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td>
+                <td class="mono">${esc(r.deviceNo)}</td>
+                <td>${esc(r.deviceName)}</td>
+                <td>${esc(r.faultDesc)}</td>
+                <td>${esc(r.reportTime)}</td>
+                <td>${repairBadge(r.status)}</td>
+                <td>${r.status !== 2 ? `<button class="btn btn-primary btn-sm" onclick='openRepair(${JSON.stringify(r)})'>处理</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    function openRepair(r) {
+        document.getElementById('rpId').value = r.id;
+        document.getElementById('rpInfo').innerHTML =
+            `<b>报修人：</b>${esc(r.userName)}<br>` +
+            `<b>设备：</b>${esc(r.deviceName)}（${esc(r.deviceNo)}）<br>` +
+            `<b>故障描述：</b>${esc(r.faultDesc)}`;
+        document.getElementById('rpResult').value = r.handleResult || '';
+        openModal('repairModal');
+    }
+
+    async function doHandleRepair(status) {
+        const id = document.getElementById('rpId').value;
+        const result = document.getElementById('rpResult').value.trim();
+        try {
+            await Api.handleRepair(Number(id), status, result);
+            toast(status === 2 ? '维修已完成' : '已标记维修中');
+            closeModal('repairModal');
+            loadRepairs();
+        } catch (e) { handleApiError(e); }
+    }
+
+    async function loadNotices() {
+        const list = await Api.getNotices();
+        const tbody = document.getElementById('noticeList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty">暂无公告</td></tr>'; return; }
+        tbody.innerHTML = list.map(n => `
+            <tr><td>${esc(n.title)}</td><td>${esc(n.publisherName)}</td><td>${esc(n.publishTime)}</td><td>-</td></tr>`).join('');
+    }
+
+    function openNotice() {
+        document.getElementById('ntTitle').value = '';
+        document.getElementById('ntContent').value = '';
+        openModal('noticeModal');
+    }
+
+    async function saveNotice() {
+        const title = document.getElementById('ntTitle').value.trim();
+        const content = document.getElementById('ntContent').value.trim();
+        if (!title || !content) { toast('请填写公告标题和内容', 'error'); return; }
+        try {
+            await Api.publishNotice(title, content);
+            toast('公告已发布');
+            closeModal('noticeModal');
+            loadNotices();
+        } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 实验室预约审核 ----------
+    async function loadLabAudit() {
+        const status = document.getElementById('labAuditStatus').value;
+        const list = await Api.getLabReservations(status);
+        const tbody = document.getElementById('labAuditList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无预约记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td><td>${esc(r.labName)}</td><td>${esc(r.reserveDate)}</td>
+                <td>${esc(r.timeSlot)}</td><td>${esc(r.purpose || '-')}</td>
+                <td>${reserveBadge(r.status)}</td>
+                <td>${r.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditLab(${r.id},1)">通过</button> <button class="btn btn-danger btn-sm" onclick="auditLab(${r.id},2)">拒绝</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    async function auditLab(id, status) {
+        try { await Api.auditLabReservation(id, status); toast(status === 1 ? '已通过' : '已拒绝'); loadLabAudit(); } catch (e) { handleApiError(e); }
+    }
+
+    // ---------- 设备预约审核 ----------
+    async function loadDevReserveAudit() {
+        const status = document.getElementById('devReserveAuditStatus').value;
+        const list = await Api.getDeviceReservations(status);
+        const tbody = document.getElementById('devReserveAuditList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty">暂无预约记录</td></tr>'; return; }
+        tbody.innerHTML = list.map(r => `
+            <tr>
+                <td>${esc(r.userName)}</td><td class="mono">${esc(r.deviceNo)}</td><td>${esc(r.deviceName)}</td>
+                <td>${esc(r.reserveDate)}</td><td>${esc(r.timeSlot)}</td>
+                <td>${reserveBadge(r.status)}</td>
+                <td>${r.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditDevReserve(${r.id},1)">通过</button> <button class="btn btn-danger btn-sm" onclick="auditDevReserve(${r.id},2)">拒绝</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    async function auditDevReserve(id, status) {
+        try { await Api.auditDeviceReservation(id, status); toast(status === 1 ? '已通过' : '已拒绝'); loadDevReserveAudit(); } catch (e) { handleApiError(e); }
+    }
+
+    function reserveBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-green', 2: 'badge-red', 3: 'badge-gray' };
+        const text = { 0: '待审核', 1: '已通过', 2: '已拒绝', 3: '已取消' }[s] || '-';
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${text}</span>`;
+    }
+
+    // ---------- 采购管理 ----------
+    async function loadPurchaseManage() {
+        const status = document.getElementById('purchaseStatus').value;
+        const list = await Api.getPurchases(status);
+        const tbody = document.getElementById('purchaseManageList');
+        if (!list.length) { tbody.innerHTML = '<tr><td colspan="8" class="empty">暂无采购申请</td></tr>'; return; }
+        tbody.innerHTML = list.map(p => `
+            <tr>
+                <td>${esc(p.deviceName)}</td><td>${esc(p.model || '-')}</td><td>${p.quantity || 0}</td>
+                <td>${p.unitPrice != null ? p.unitPrice : '-'}</td><td>${esc(p.supplier || '-')}</td>
+                <td>${esc(p.applicantName || '-')}</td>
+                <td>${purchaseBadge(p.status)}</td>
+                <td>${p.status === 0 ? `<button class="btn btn-success btn-sm" onclick="auditPurchase(${p.id},1)">批准</button> <button class="btn btn-danger btn-sm" onclick="auditPurchase(${p.id},2)">拒绝</button>` : '-'}</td>
+            </tr>`).join('');
+    }
+
+    async function auditPurchase(id, status) {
+        try { await Api.auditPurchase(id, status); toast(status === 1 ? '已批准' : '已拒绝'); loadPurchaseManage(); } catch (e) { handleApiError(e); }
+    }
+
+    function purchaseBadge(s) {
+        const map = { 0: 'badge-yellow', 1: 'badge-green', 2: 'badge-red', 3: 'badge-blue' };
+        const text = { 0: '待审批', 1: '已批准', 2: '已拒绝', 3: '已采购' }[s] || '-';
+        return `<span class="badge ${map[s] || 'badge-gray'}"><span class="badge-dot"></span>${text}</span>`;
+    }
+
+    document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => switchPage(n.dataset.page)));
+    document.querySelectorAll('.modal-mask').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+
+    (async function init() {
+        initUser();
+        startTokenExpiryCheck();
+        const gotoPage = sessionStorage.getItem('gotoPage');
+        if (gotoPage) {
+            sessionStorage.removeItem('gotoPage');
+            switchPage(gotoPage);
+        } else {
+            switchPage('overview');
+        }
+    })();
+</script>
+</body>
+</html>

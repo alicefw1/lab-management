@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据大屏 - 实验室综合管理系统</title>
+    <link href="assets/app.css" rel="stylesheet">
+</head>
+<body class="dashboard-shell">
+    <header class="dash-header">
+        <div style="display:flex;align-items:center;gap:14px;">
+            <button class="btn btn-ghost btn-sm" onclick="goBack()" style="border-color:rgba(34,211,238,0.4);color:#67e8f9;" title="返回首页">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                返回
+            </button>
+            <div class="dash-title">实验室综合管理平台 · 实时数据大屏</div>
+        </div>
+        <div class="dash-clock">
+            <span id="dashTime">--:--:--</span>
+            <span class="date" id="dashDate">--</span>
+        </div>
+    </header>
+
+    <main class="dash-main">
+        <!-- 左侧：实时状态 + 状态统计 -->
+        <div>
+            <div class="dash-panel" style="margin-bottom:16px;">
+                <div class="dash-panel-title">实时状态 / REAL TIME</div>
+                <div class="dash-stat-card">
+                    <div>
+                        <div class="label">环境监测点</div>
+                        <div class="value" id="envOnline">--</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="label">总点数</div>
+                        <div class="value" style="font-size:18px;color:#94a3b8;" id="envTotal">--</div>
+                    </div>
+                </div>
+                <div class="dash-stat-card">
+                    <div>
+                        <div class="label">设备状态</div>
+                        <div class="value normal" id="devAvailable">--</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="label">总数</div>
+                        <div class="value" style="font-size:18px;color:#94a3b8;" id="devTotal">--</div>
+                    </div>
+                </div>
+                <div class="dash-stat-card">
+                    <div>
+                        <div class="label">实验室总数</div>
+                        <div class="value" id="labTotal">--</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="label">可用</div>
+                        <div class="value normal" style="font-size:18px;" id="labAvailable">--</div>
+                    </div>
+                </div>
+                <div class="dash-stat-card">
+                    <div>
+                        <div class="label">未处理报警</div>
+                        <div class="value danger" id="alarmCount">--</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="label">能耗表</div>
+                        <div class="value" style="font-size:18px;color:#8b5cf6;" id="meterTotal">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dash-panel">
+                <div class="dash-panel-title">状态统计 / STATUS</div>
+                <div class="dash-bar-list" id="devStatusBars"></div>
+            </div>
+        </div>
+
+        <!-- 中间：实验室实景图片轮播 -->
+        <div class="dash-panel" style="display:flex;flex-direction:column;">
+            <div class="dash-panel-title" style="text-align:center;">实验室实景 · 实时态势</div>
+            <div class="dash-lab-showcase" id="dashLabShowcase">
+                <!-- 通过 JS 动态填充实验室图片轮播 -->
+                <div class="lab-showcase-main">
+                    <img id="showcaseImg" src="" alt="实验室实景">
+                    <div class="showcase-overlay">
+                        <div class="showcase-name" id="showcaseName">--</div>
+                        <div class="showcase-desc" id="showcaseDesc">--</div>
+                    </div>
+                    <div class="showcase-nav">
+                        <button class="showcase-btn" onclick="prevLab()">‹</button>
+                        <button class="showcase-btn" onclick="nextLab()">›</button>
+                    </div>
+                </div>
+                <div class="lab-showcase-thumbs" id="showcaseThumbs"></div>
+            </div>
+            <div style="margin-top:auto;padding-top:14px;display:flex;justify-content:space-around;font-size:12px;color:#94a3b8;">
+                <span>实验室实景</span>
+                <span>环境指标</span>
+                <span>设备状态</span>
+                <span>预约动态</span>
+                <span>实验课程</span>
+            </div>
+        </div>
+
+        <!-- 右侧：快捷操作 + 能耗排行 + 环境指标 + 报警 -->
+        <div>
+            <div class="dash-panel" style="margin-bottom:16px;">
+                <div class="dash-panel-title">快捷操作 / QUICK ACCESS</div>
+                <div class="dash-quick-actions">
+                    <button class="dash-quick-btn" onclick="quickBorrow()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6a2 2 0 0 0 2 2h2l3 5 3-5h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/></svg>
+                        <span>借用设备</span>
+                    </button>
+                    <button class="dash-quick-btn" onclick="quickReturn()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                        <span>归还设备</span>
+                    </button>
+                    <button class="dash-quick-btn" onclick="quickReserve()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                        <span>预约实验室</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dash-panel" style="margin-bottom:16px;">
+                <div class="dash-panel-title">能耗排行 / ENERGY RANK</div>
+                <ul class="dash-rank-list" id="energyRank"></ul>
+            </div>
+
+            <div class="dash-panel" style="margin-bottom:16px;">
+                <div class="dash-panel-title">环境指标 / ENVIRONMENT</div>
+                <div class="dash-bar-list" id="envIndicators"></div>
+            </div>
+
+            <div class="dash-panel">
+                <div class="dash-panel-title">报警信息 / ALARMS</div>
+                <div class="dash-alarm-list" id="alarmList"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/api.js"></script>
+    <script>
+        // 检查登录
+        const USER = getLoginUser();
+        const TOKEN = getToken();
+        if (!TOKEN || !USER) { location.href = 'login.html'; }
+
+        // 顶部时钟
+        function updateClock() {
+            const now = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            document.getElementById('dashTime').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+            document.getElementById('dashDate').textContent = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' 星期' + '日一二三四五六'[now.getDay()];
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // 返回按钮
+        function goBack() {
+            const roleCode = USER ? USER.roleCode : 'STUDENT';
+            if (roleCode === 'ADMIN' || roleCode === 'DEPARTMENT_HEAD') location.href = 'board_admin.html';
+            else if (roleCode === 'LAB_ADMIN') location.href = 'board_lab.html';
+            else location.href = 'board_student.html';
+        }
+
+        // 快捷操作：跳转到对应页面
+        function getHomePage() {
+            const roleCode = USER ? USER.roleCode : 'STUDENT';
+            if (roleCode === 'ADMIN' || roleCode === 'DEPARTMENT_HEAD') return 'board_admin.html';
+            if (roleCode === 'LAB_ADMIN') return 'board_lab.html';
+            return 'board_student.html';
+        }
+        function quickBorrow() {
+            // 借用设备：跳转到设备信息页
+            sessionStorage.setItem('gotoPage', 'devices');
+            location.href = getHomePage();
+        }
+        function quickReturn() {
+            // 归还设备：跳转到借用记录页
+            sessionStorage.setItem('gotoPage', 'records');
+            location.href = getHomePage();
+        }
+        function quickReserve() {
+            // 预约实验室：跳转到实验室预约页
+            sessionStorage.setItem('gotoPage', 'lab-reserve');
+            location.href = getHomePage();
+        }
+
+        // 实验室图片轮播
+        let showcaseLabs = [];
+        let showcaseIndex = 0;
+        let showcaseTimer = null;
+
+        function renderLabShowcase() {
+            const img = document.getElementById('showcaseImg');
+            const name = document.getElementById('showcaseName');
+            const desc = document.getElementById('showcaseDesc');
+            const thumbs = document.getElementById('showcaseThumbs');
+            if (!showcaseLabs.length) {
+                img.style.display = 'none';
+                name.textContent = '暂无实验室数据';
+                desc.textContent = '';
+                thumbs.innerHTML = '';
+                return;
+            }
+            const lab = showcaseLabs[showcaseIndex];
+            img.style.display = 'block';
+            img.src = lab.imageUrl || '';
+            img.onerror = function () { this.style.display = 'none'; };
+            name.textContent = lab.name || '--';
+            desc.textContent = (lab.description || '') + ' · 容量 ' + (lab.capacity || 0) + ' 人 · 负责人 ' + (lab.manager || '-');
+            // 缩略图
+            thumbs.innerHTML = showcaseLabs.map((l, i) =>
+                `<div class="showcase-thumb ${i === showcaseIndex ? 'active' : ''}" onclick="switchLab(${i})">
+                    <img src="${esc(l.imageUrl || '')}" alt="${esc(l.name)}" onerror="this.style.opacity='0.2'">
+                    <span>${esc(l.name)}</span>
+                </div>`
+            ).join('');
+        }
+
+        function switchLab(i) {
+            showcaseIndex = (i + showcaseLabs.length) % showcaseLabs.length;
+            renderLabShowcase();
+            resetShowcaseTimer();
+        }
+        function nextLab() { switchLab(showcaseIndex + 1); }
+        function prevLab() { switchLab(showcaseIndex - 1); }
+        function resetShowcaseTimer() {
+            if (showcaseTimer) clearInterval(showcaseTimer);
+            showcaseTimer = setInterval(() => switchLab(showcaseIndex + 1), 5000);
+        }
+
+        // 加载大屏数据
+        async function loadDashboardData() {
+            try {
+                // 环境监测
+                const envData = await Api.getEnvDashboard().catch(() => ({}));
+                document.getElementById('envOnline').textContent = envData.sensorOnline || 0;
+                document.getElementById('envTotal').textContent = envData.sensorTotal || 0;
+                document.getElementById('meterTotal').textContent = envData.meterTotal || 0;
+
+                // 设备状态统计
+                const devices = await Api.getDevices().catch(() => []);
+                const devTotal = devices.length;
+                const devAvailable = devices.filter(d => d.status === 1).length;
+                document.getElementById('devTotal').textContent = devTotal;
+                document.getElementById('devAvailable').textContent = devAvailable;
+
+                // 实验室统计 + 图片轮播
+                const labs = await Api.getLabs().catch(() => []);
+                const labAvail = labs.filter(l => l.status === 1).length;
+                document.getElementById('labTotal').textContent = labs.length;
+                document.getElementById('labAvailable').textContent = labAvail;
+                const labsWithImg = labs.filter(l => l.imageUrl);
+                const newLabs = labsWithImg.length ? labsWithImg : labs;
+                // 仅当实验室数据变化时才重建轮播，避免刷新时闪烁
+                if (JSON.stringify(newLabs.map(l => l.id)) !== JSON.stringify(showcaseLabs.map(l => l.id))) {
+                    showcaseLabs = newLabs;
+                    renderLabShowcase();
+                    resetShowcaseTimer();
+                }
+
+                // 报警统计
+                const alarms = await Api.getAlarms(0).catch(() => []);
+                document.getElementById('alarmCount').textContent = alarms.length;
+
+                // 设备状态柱状图
+                const stats = {
+                    '可借': devices.filter(d => d.status === 1).length,
+                    '已借出': devices.filter(d => d.status === 2).length,
+                    '维修中': devices.filter(d => d.status === 3).length,
+                    '报废': devices.filter(d => d.status === 4).length
+                };
+                const maxVal = Math.max(1, ...Object.values(stats));
+                document.getElementById('devStatusBars').innerHTML = Object.entries(stats).map(([k, v]) =>
+                    `<div class="bar-row"><span class="bar-label">${k}</span><div class="bar-track"><div class="bar-fill" style="width:${(v / maxVal) * 100}%;"></div></div><span class="bar-value">${v}</span></div>`
+                ).join('');
+
+                // 能耗排行（使用真实能耗仪表数据，按当前值排序）
+                const meters = await Api.getEnvEnergy().catch(() => []);
+                const typeLabel = { water: '水', electricity: '电', gas: '气' };
+                const energyList = meters
+                    .map(m => ({
+                        name: m.name || m.meterCode,
+                        type: typeLabel[m.type] || m.type || '',
+                        unit: m.unit || '',
+                        value: m.currentValue != null ? Number(m.currentValue) : 0
+                    }))
+                    .sort((a, b) => b.value - a.value)
+                    .slice(0, 6);
+                if (energyList.length === 0) {
+                    energyList.push({ name: '暂无能耗数据', type: '', unit: '', value: 0 });
+                }
+                document.getElementById('energyRank').innerHTML = energyList.map((e, i) =>
+                    `<li><span class="rank-no ${i < 3 ? 'top' : ''}">${i + 1}</span><span class="name">${esc(e.name)}</span><span class="value">${e.value ? e.value.toLocaleString() : '--'}${e.unit ? ' ' + esc(e.unit) : ''}</span></li>`
+                ).join('');
+
+                // 环境指标
+                const envIndicators = (envData.sensors || []).map(s => ({
+                    name: s.name,
+                    value: s.currentValue != null ? Number(s.currentValue).toFixed(1) : '--',
+                    unit: s.unit,
+                    status: s.status === 1 ? 'normal' : (s.status === 0 ? 'warning' : 'danger')
+                })).slice(0, 6);
+                if (envIndicators.length === 0) {
+                    envIndicators.push(
+                        { name: '温度监测', value: '22.5', unit: '℃', status: 'normal' },
+                        { name: '湿度监测', value: '45', unit: '%', status: 'normal' },
+                        { name: 'PM2.5', value: '35', unit: 'μg/m³', status: 'normal' }
+                    );
+                }
+                document.getElementById('envIndicators').innerHTML = envIndicators.map(e =>
+                    `<div class="bar-row"><span class="bar-label">${esc(e.name)}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, parseFloat(e.value) || 50)}%;"></div></div><span class="bar-value" style="color:${e.status === 'normal' ? '#34d399' : '#fbbf24'};">${e.value}${e.unit ? ' ' + e.unit : ''}</span></div>`
+                ).join('');
+
+                // 报警列表
+                const alarmList = alarms.slice(0, 8);
+                document.getElementById('alarmList').innerHTML = alarmList.length
+                    ? alarmList.map(a => `
+                        <div class="dash-alarm-item">
+                            <span class="level-dot" style="color:${a.level === 'critical' ? '#f87171' : (a.level === 'warning' ? '#fbbf24' : '#22d3ee')};"></span>
+                            <div class="content">
+                                <div class="title">${esc(a.targetName || '-')} · ${a.levelText || ''}</div>
+                                <div class="time">${esc(a.createTime)}</div>
+                            </div>
+                        </div>
+                    `).join('')
+                    : '<div style="text-align:center;color:#64748b;padding:20px 0;">暂无报警</div>';
+            } catch (e) { console.error('大屏数据加载失败', e); }
+        }
+
+        function esc(v) {
+            if (v === null || v === undefined) return '';
+            return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // 启动
+        (async function init() {
+            await loadDashboardData();
+            // 每 30 秒自动刷新
+            setInterval(loadDashboardData, 30000);
+        })();
+    </script>
+</body>
+</html>

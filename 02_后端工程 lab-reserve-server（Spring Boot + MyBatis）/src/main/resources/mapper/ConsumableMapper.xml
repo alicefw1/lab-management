@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.ConsumableMapper">
+    <select id="selectList" resultType="com.lab.reserve.entity.Consumable">
+        SELECT * FROM consumable
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (name LIKE CONCAT('%', #{keyword}, '%') OR category LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+    <select id="selectById" resultType="com.lab.reserve.entity.Consumable">
+        SELECT * FROM consumable WHERE id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.Consumable" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO consumable(name, spec, unit, quantity, category, status)
+        VALUES(#{name}, #{spec}, #{unit}, #{quantity}, #{category}, #{status})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.Consumable">
+        UPDATE consumable
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="spec != null">spec = #{spec},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM consumable WHERE id = #{id}
+    </delete>
+</mapper>

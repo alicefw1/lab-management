@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.BorrowRecordMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.BorrowRecord">
+        <id column="id" property="id"/>
+        <result column="apply_id" property="applyId"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="user_id" property="userId"/>
+        <result column="borrow_time" property="borrowTime"/>
+        <result column="return_time" property="returnTime"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="device_no" property="deviceNo"/>
+        <result column="user_name" property="userName"/>
+        <result column="expected_return_time" property="expectedReturnTime"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT b.*, d.device_name, d.device_no, u.real_name AS user_name, a.expected_return_time
+        FROM borrow_record b
+        LEFT JOIN device d ON b.device_id = d.id
+        LEFT JOIN `user` u ON b.user_id = u.id
+        LEFT JOIN borrow_apply a ON b.apply_id = a.id
+        <where>
+            <if test="status != null">AND b.status = #{status}</if>
+            <if test="userId != null">AND b.user_id = #{userId}</if>
+        </where>
+        ORDER BY b.borrow_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT b.*, d.device_name, d.device_no, u.real_name AS user_name, a.expected_return_time
+        FROM borrow_record b
+        LEFT JOIN device d ON b.device_id = d.id
+        LEFT JOIN `user` u ON b.user_id = u.id
+        LEFT JOIN borrow_apply a ON b.apply_id = a.id
+        WHERE b.id = #{id}
+    </select>
+
+    <select id="countActiveByDeviceId" resultType="int">
+        SELECT COUNT(*) FROM borrow_record
+        WHERE device_id = #{deviceId} AND status IN (1, 3) AND return_time IS NULL
+    </select>
+
+    <insert id="insert" parameterType="com.lab.reserve.entity.BorrowRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO borrow_record(apply_id, device_id, user_id, borrow_time, status, remark)
+        VALUES(#{applyId}, #{deviceId}, #{userId}, #{borrowTime}, #{status}, #{remark})
+    </insert>
+
+    <update id="updateById" parameterType="com.lab.reserve.entity.BorrowRecord">
+        UPDATE borrow_record
+        <set>
+            <if test="returnTime != null">return_time = #{returnTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.FeedbackMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.Feedback">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="reply" property="reply"/>
+        <result column="reply_user_id" property="replyUserId"/>
+        <result column="reply_time" property="replyTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT f.*, u.real_name AS user_name
+        FROM feedback f
+        LEFT JOIN `user` u ON f.user_id = u.id
+        <where>
+            <if test="status != null">AND f.status = #{status}</if>
+            <if test="userId != null">AND f.user_id = #{userId}</if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT f.*, u.real_name AS user_name
+        FROM feedback f
+        LEFT JOIN `user` u ON f.user_id = u.id
+        WHERE f.id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.Feedback" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO feedback(user_id, title, content, type, status)
+        VALUES(#{userId}, #{title}, #{content}, #{type}, #{status})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.Feedback">
+        UPDATE feedback
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="reply != null">reply = #{reply},</if>
+            <if test="replyUserId != null">reply_user_id = #{replyUserId},</if>
+            <if test="replyTime != null">reply_time = #{replyTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

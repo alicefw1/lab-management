@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.AlarmRecordMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.AlarmRecord">
+        <id column="id" property="id"/>
+        <result column="target_type" property="targetType"/>
+        <result column="target_id" property="targetId"/>
+        <result column="target_name" property="targetName"/>
+        <result column="metric" property="metric"/>
+        <result column="value" property="value"/>
+        <result column="level" property="level"/>
+        <result column="message" property="message"/>
+        <result column="status" property="status"/>
+        <result column="handler_id" property="handlerId"/>
+        <result column="handle_time" property="handleTime"/>
+        <result column="handle_remark" property="handleRemark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="handler_name" property="handlerName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT a.*, u.real_name AS handler_name
+        FROM alarm_record a
+        LEFT JOIN `user` u ON a.handler_id = u.id
+        <where>
+            <if test="status != null">AND a.status = #{status}</if>
+            <if test="level != null and level != ''">AND a.level = #{level}</if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT a.*, u.real_name AS handler_name
+        FROM alarm_record a
+        LEFT JOIN `user` u ON a.handler_id = u.id
+        WHERE a.id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.AlarmRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO alarm_record(target_type, target_id, target_name, metric, value, level, message, status)
+        VALUES(#{targetType}, #{targetId}, #{targetName}, #{metric}, #{value}, #{level}, #{message}, #{status})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.AlarmRecord">
+        UPDATE alarm_record
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="handlerId != null">handler_id = #{handlerId},</if>
+            <if test="handleTime != null">handle_time = #{handleTime},</if>
+            <if test="handleRemark != null">handle_remark = #{handleRemark},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <select id="countByStatus" resultType="int">
+        SELECT COUNT(*) FROM alarm_record WHERE status = #{status}
+    </select>
+    <select id="statistics" resultType="map">
+        SELECT level, status, COUNT(*) AS cnt
+        FROM alarm_record
+        GROUP BY level, status
+    </select>
+</mapper>

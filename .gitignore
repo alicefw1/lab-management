@@ -1,0 +1,30 @@
+# java maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.versionsBackup
+**/pom.xml.next
+
+# 本地工具，不要把maven压缩包提交
+.tooling/maven/apache-maven-*.zip
+
+# 日志
+*.log
+runtime*.log
+
+# IDE
+.vscode/
+.codebuddy/
+
+# os
+.DS_Store
+Thumbs.db
+
+# Local tools and credentials
+.tooling/
+.env
+.env.*
+!.env.example
+node_modules/
+

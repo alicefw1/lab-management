@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.LabTypeMapper">
+    <select id="selectList" resultType="com.lab.reserve.entity.LabType">
+        SELECT id, type_name, description, create_time FROM lab_type ORDER BY id
+    </select>
+    <select id="selectById" resultType="com.lab.reserve.entity.LabType">
+        SELECT id, type_name, description, create_time FROM lab_type WHERE id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.LabType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lab_type(type_name, description) VALUES(#{typeName}, #{description})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.LabType">
+        UPDATE lab_type
+        <set>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="description != null">description = #{description},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM lab_type WHERE id = #{id}
+    </delete>
+</mapper>

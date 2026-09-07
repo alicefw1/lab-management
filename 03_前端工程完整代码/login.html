@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实验室设备管理系统 - 登录</title>
+    <link href="assets/app.css" rel="stylesheet">
+</head>
+<body class="login-shell">
+    <div class="login-grid">
+        <div class="login-brand">
+            <div class="logo">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <h1>实验室设备<span class="grad">智能管理平台</span></h1>
+            <p>面向高校实验室的数字化设备管理系统，覆盖设备台账、借用审批、归还流转、报修维护与数据统计的全生命周期管理，助力实验室高效、规范、安全运行。</p>
+            <div class="tech-tags">
+                <span>Spring Boot</span>
+                <span>MyBatis</span>
+                <span>JWT 鉴权</span>
+                <span>科技可视化</span>
+            </div>
+        </div>
+        <div class="login-panel">
+            <h2>账号登录</h2>
+            <p class="sub">欢迎回来，请输入账号信息进入系统</p>
+            <div id="loginForm">
+                <div class="field">
+                    <label>账号</label>
+                    <input id="username" class="input" placeholder="请输入学号 / 工号" autocomplete="username">
+                </div>
+                <div class="field">
+                    <label>密码</label>
+                    <input id="password" type="password" class="input" placeholder="请输入密码" autocomplete="current-password">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="doLogin()">登 录</button>
+            </div>
+
+            <div id="registerForm" style="display:none;">
+                <div class="field">
+                    <label>账号</label>
+                    <input id="regUsername" class="input" placeholder="设置登录账号">
+                </div>
+                <div class="field">
+                    <label>姓名</label>
+                    <input id="regRealName" class="input" placeholder="真实姓名">
+                </div>
+                <div class="field">
+                    <label>手机号</label>
+                    <input id="regPhone" class="input" placeholder="联系电话">
+                </div>
+                <div class="field">
+                    <label>邮箱</label>
+                    <input id="regEmail" class="input" placeholder="电子邮箱（可选）">
+                </div>
+                <div class="field">
+                    <label>密码</label>
+                    <input id="regPassword" type="password" class="input" placeholder="6-32 位密码">
+                </div>
+                <div class="field">
+                    <label>确认密码</label>
+                    <input id="regConfirm" type="password" class="input" placeholder="再次输入密码">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="doRegister()">注 册</button>
+            </div>
+
+            <div style="text-align:center; margin-top: 18px; font-size: 13px;">
+                <span class="text-muted" id="toggleHint">还没有账号？</span>
+                <a href="javascript:;" id="toggleBtn" onclick="toggleForm()">立即注册</a>
+            </div>
+            <div style="text-align:center; margin-top: 22px; font-size: 12px; color: var(--text-muted);">
+                测试账号：admin / 123456（管理员）· lab / 123456（实验员）· student / 123456（学生）
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/api.js"></script>
+    <script>
+        redirectIfLoggedIn();
+        let isLogin = true;
+
+        function toggleForm() {
+            isLogin = !isLogin;
+            document.getElementById('loginForm').style.display = isLogin ? '' : 'none';
+            document.getElementById('registerForm').style.display = isLogin ? 'none' : '';
+            document.getElementById('toggleBtn').innerText = isLogin ? '立即注册' : '返回登录';
+            document.getElementById('toggleHint').innerText = isLogin ? '还没有账号？' : '已有账号？';
+        }
+
+        async function doLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (!username || !password) { toast('请输入账号和密码', 'error'); return; }
+            try {
+                const data = await Api.login(username, password);
+                setLoggedUser(data);
+                toast('登录成功');
+                setTimeout(() => { location.href = getRolePage(data.roleCode); }, 400);
+            } catch (e) { handleApiError(e); }
+        }
+
+        async function doRegister() {
+            const username = document.getElementById('regUsername').value.trim();
+            const realName = document.getElementById('regRealName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+            if (!username || !password) { toast('请填写账号和密码', 'error'); return; }
+            if (password !== confirm) { toast('两次输入的密码不一致', 'error'); return; }
+            try {
+                await Api.register({ username, password, realName, phone, email });
+                toast('注册成功，请登录');
+                toggleForm();
+                document.getElementById('username').value = username;
+                document.getElementById('password').value = '';
+            } catch (e) { handleApiError(e); }
+        }
+
+        document.getElementById('password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    </script>
+</body>
+</html>

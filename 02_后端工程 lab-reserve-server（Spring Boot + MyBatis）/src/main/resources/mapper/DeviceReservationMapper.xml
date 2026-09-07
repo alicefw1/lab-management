@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.DeviceReservationMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.DeviceReservation">
+        <id column="id" property="id"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="user_id" property="userId"/>
+        <result column="reserve_date" property="reserveDate"/>
+        <result column="time_slot" property="timeSlot"/>
+        <result column="purpose" property="purpose"/>
+        <result column="status" property="status"/>
+        <result column="audit_user_id" property="auditUserId"/>
+        <result column="audit_time" property="auditTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="device_no" property="deviceNo"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT dr.*, d.device_name, d.device_no, u.real_name AS user_name
+        FROM device_reservation dr
+        LEFT JOIN device d ON dr.device_id = d.id
+        LEFT JOIN `user` u ON dr.user_id = u.id
+        <where>
+            <if test="status != null">AND dr.status = #{status}</if>
+            <if test="userId != null">AND dr.user_id = #{userId}</if>
+        </where>
+        ORDER BY dr.create_time DESC
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT dr.*, d.device_name, d.device_no, u.real_name AS user_name
+        FROM device_reservation dr
+        LEFT JOIN device d ON dr.device_id = d.id
+        LEFT JOIN `user` u ON dr.user_id = u.id
+        WHERE dr.id = #{id}
+    </select>
+    <select id="countConflict" resultType="int">
+        SELECT COUNT(*) FROM device_reservation
+        WHERE device_id = #{deviceId} AND reserve_date = #{reserveDate}
+        AND time_slot = #{timeSlot} AND status IN (0, 1)
+        <if test="excludeId != null">AND id != #{excludeId}</if>
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.DeviceReservation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO device_reservation(device_id, user_id, reserve_date, time_slot, purpose, status)
+        VALUES(#{deviceId}, #{userId}, #{reserveDate}, #{timeSlot}, #{purpose}, #{status})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.DeviceReservation">
+        UPDATE device_reservation
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditUserId != null">audit_user_id = #{auditUserId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.KnowledgeMapper">
+    <select id="selectList" resultType="com.lab.reserve.entity.Knowledge">
+        SELECT * FROM knowledge
+        <where>
+            <if test="category != null and category != ''">AND category = #{category}</if>
+            <if test="keyword != null and keyword != ''">AND title LIKE CONCAT('%', #{keyword}, '%')</if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    <select id="selectById" resultType="com.lab.reserve.entity.Knowledge">
+        SELECT * FROM knowledge WHERE id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.Knowledge" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge(title, category, content, author_id, view_count)
+        VALUES(#{title}, #{category}, #{content}, #{authorId}, #{viewCount})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.Knowledge">
+        UPDATE knowledge
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="content != null">content = #{content},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM knowledge WHERE id = #{id}
+    </delete>
+    <update id="incrementView">
+        UPDATE knowledge SET view_count = view_count + 1 WHERE id = #{id}
+    </update>
+</mapper>

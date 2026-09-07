@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.InstrumentMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.Instrument">
+        <id column="id" property="id"/>
+        <result column="instrument_no" property="instrumentNo"/>
+        <result column="name" property="name"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="model" property="model"/>
+        <result column="brand" property="brand"/>
+        <result column="specification" property="specification"/>
+        <result column="accuracy" property="accuracy"/>
+        <result column="serial_no" property="serialNo"/>
+        <result column="purchase_date" property="purchaseDate"/>
+        <result column="last_check_date" property="lastCheckDate"/>
+        <result column="next_check_date" property="nextCheckDate"/>
+        <result column="check_cycle" property="checkCycle"/>
+        <result column="status" property="status"/>
+        <result column="location" property="location"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="description" property="description"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="category_name" property="categoryName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT i.*, c.category_name
+        FROM instrument i
+        LEFT JOIN device_category c ON i.category_id = c.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (i.name LIKE CONCAT('%', #{keyword}, '%') OR i.instrument_no LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null">AND i.status = #{status}</if>
+        </where>
+        ORDER BY i.id
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT i.*, c.category_name
+        FROM instrument i
+        LEFT JOIN device_category c ON i.category_id = c.id
+        WHERE i.id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.Instrument" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO instrument(instrument_no, name, device_id, category_id, model, brand, specification, accuracy, serial_no, purchase_date, last_check_date, next_check_date, check_cycle, status, location, image_url, description)
+        VALUES(#{instrumentNo}, #{name}, #{deviceId}, #{categoryId}, #{model}, #{brand}, #{specification}, #{accuracy}, #{serialNo}, #{purchaseDate}, #{lastCheckDate}, #{nextCheckDate}, #{checkCycle}, #{status}, #{location}, #{imageUrl}, #{description})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.Instrument">
+        UPDATE instrument
+        <set>
+            <if test="instrumentNo != null">instrument_no = #{instrumentNo},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="specification != null">specification = #{specification},</if>
+            <if test="accuracy != null">accuracy = #{accuracy},</if>
+            <if test="serialNo != null">serial_no = #{serialNo},</if>
+            <if test="purchaseDate != null">purchase_date = #{purchaseDate},</if>
+            <if test="lastCheckDate != null">last_check_date = #{lastCheckDate},</if>
+            <if test="nextCheckDate != null">next_check_date = #{nextCheckDate},</if>
+            <if test="checkCycle != null">check_cycle = #{checkCycle},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+            <if test="description != null">description = #{description},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM instrument WHERE id = #{id}
+    </delete>
+    <select id="countByStatus" resultType="int">
+        SELECT COUNT(*) FROM instrument WHERE status = #{status}
+    </select>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.WasteMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.Waste">
+        <id column="id" property="id"/>
+        <result column="waste_no" property="wasteNo"/>
+        <result column="type" property="type"/>
+        <result column="source" property="source"/>
+        <result column="quantity" property="quantity"/>
+        <result column="unit" property="unit"/>
+        <result column="reporter_id" property="reporterId"/>
+        <result column="status" property="status"/>
+        <result column="audit_user_id" property="auditUserId"/>
+        <result column="audit_time" property="auditTime"/>
+        <result column="audit_remark" property="auditRemark"/>
+        <result column="dispose_user_id" property="disposeUserId"/>
+        <result column="dispose_time" property="disposeTime"/>
+        <result column="dispose_remark" property="disposeRemark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="reporter_name" property="reporterName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT w.*, u.real_name AS reporter_name
+        FROM waste w
+        LEFT JOIN `user` u ON w.reporter_id = u.id
+        <where>
+            <if test="status != null">AND w.status = #{status}</if>
+        </where>
+        ORDER BY w.create_time DESC
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT w.*, u.real_name AS reporter_name
+        FROM waste w
+        LEFT JOIN `user` u ON w.reporter_id = u.id
+        WHERE w.id = #{id}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.Waste" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO waste(waste_no, type, source, quantity, unit, reporter_id, status)
+        VALUES(#{wasteNo}, #{type}, #{source}, #{quantity}, #{unit}, #{reporterId}, #{status})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.Waste">
+        UPDATE waste
+        <set>
+            <if test="wasteNo != null">waste_no = #{wasteNo},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditUserId != null">audit_user_id = #{auditUserId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            <if test="disposeUserId != null">dispose_user_id = #{disposeUserId},</if>
+            <if test="disposeTime != null">dispose_time = #{disposeTime},</if>
+            <if test="disposeRemark != null">dispose_remark = #{disposeRemark},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM waste WHERE id = #{id}
+    </delete>
+</mapper>

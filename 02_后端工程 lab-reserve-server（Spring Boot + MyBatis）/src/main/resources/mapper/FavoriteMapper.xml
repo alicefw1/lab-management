@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.FavoriteMapper">
+    <select id="selectByUser" resultType="com.lab.reserve.entity.Favorite">
+        SELECT f.id, f.user_id, f.target_type, f.target_id, f.create_time,
+               CASE
+                   WHEN f.target_type = 'lab' THEN lr.name
+                   WHEN f.target_type = 'device' THEN d.device_name
+               END AS target_name,
+               CASE
+                   WHEN f.target_type = 'lab' THEN lr.image_url
+                   WHEN f.target_type = 'device' THEN d.image_url
+               END AS target_image,
+               CASE
+                   WHEN f.target_type = 'lab' THEN lr.location
+                   WHEN f.target_type = 'device' THEN d.model
+               END AS target_sub
+        FROM favorite f
+        LEFT JOIN lab_room lr ON f.target_type = 'lab' AND f.target_id = lr.id
+        LEFT JOIN device d ON f.target_type = 'device' AND f.target_id = d.id
+        WHERE f.user_id = #{userId}
+        <if test="targetType != null and targetType != ''">
+            AND f.target_type = #{targetType}
+        </if>
+        ORDER BY f.create_time DESC
+    </select>
+    <select id="countByUserTarget" resultType="int">
+        SELECT COUNT(*) FROM favorite
+        WHERE user_id = #{userId} AND target_type = #{targetType} AND target_id = #{targetId}
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.Favorite" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO favorite(user_id, target_type, target_id)
+        VALUES(#{userId}, #{targetType}, #{targetId})
+    </insert>
+    <delete id="delete">
+        DELETE FROM favorite
+        WHERE user_id = #{userId} AND target_type = #{targetType} AND target_id = #{targetId}
+    </delete>
+</mapper>

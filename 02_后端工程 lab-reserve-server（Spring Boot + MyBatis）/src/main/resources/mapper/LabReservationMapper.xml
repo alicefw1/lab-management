@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lab.reserve.mapper.LabReservationMapper">
+    <resultMap id="BaseResultMap" type="com.lab.reserve.entity.LabReservation">
+        <id column="id" property="id"/>
+        <result column="lab_id" property="labId"/>
+        <result column="user_id" property="userId"/>
+        <result column="reserve_date" property="reserveDate"/>
+        <result column="time_slot" property="timeSlot"/>
+        <result column="purpose" property="purpose"/>
+        <result column="status" property="status"/>
+        <result column="audit_user_id" property="auditUserId"/>
+        <result column="audit_time" property="auditTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="lab_name" property="labName"/>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT lr.*, l.name AS lab_name, u.real_name AS user_name
+        FROM lab_reservation lr
+        LEFT JOIN lab_room l ON lr.lab_id = l.id
+        LEFT JOIN `user` u ON lr.user_id = u.id
+        <where>
+            <if test="status != null">AND lr.status = #{status}</if>
+            <if test="userId != null">AND lr.user_id = #{userId}</if>
+        </where>
+        ORDER BY lr.create_time DESC
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT lr.*, l.name AS lab_name, u.real_name AS user_name
+        FROM lab_reservation lr
+        LEFT JOIN lab_room l ON lr.lab_id = l.id
+        LEFT JOIN `user` u ON lr.user_id = u.id
+        WHERE lr.id = #{id}
+    </select>
+    <select id="countConflict" resultType="int">
+        SELECT COUNT(*) FROM lab_reservation
+        WHERE lab_id = #{labId} AND reserve_date = #{reserveDate}
+        AND time_slot = #{timeSlot} AND status IN (0, 1)
+        <if test="excludeId != null">AND id != #{excludeId}</if>
+    </select>
+    <insert id="insert" parameterType="com.lab.reserve.entity.LabReservation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lab_reservation(lab_id, user_id, reserve_date, time_slot, purpose, status)
+        VALUES(#{labId}, #{userId}, #{reserveDate}, #{timeSlot}, #{purpose}, #{status})
+    </insert>
+    <update id="updateById" parameterType="com.lab.reserve.entity.LabReservation">
+        UPDATE lab_reservation
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditUserId != null">audit_user_id = #{auditUserId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>
